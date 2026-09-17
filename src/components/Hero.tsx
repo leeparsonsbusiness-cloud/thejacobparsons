@@ -196,13 +196,6 @@ export default function Hero() {
             <span>WATCH ALL FOOTAGE</span>
             <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
           </a>
-
-          <a
-            href="/merch"
-            className="border border-white/30 text-[#f2f2f2] font-mono text-xs uppercase tracking-[0.25em] px-8 py-4 hover:border-white hover:bg-white/5 transition-all duration-200 bg-black/40 backdrop-blur-sm"
-          >
-            TOUR MERCH DROP
-          </a>
         </div>
       </div>
     </section>

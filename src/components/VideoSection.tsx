@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { videos, Video } from '@/data/videos'
 
 interface SongRequestForm {
@@ -14,7 +15,6 @@ interface SongRequestForm {
 }
 
 export default function VideoSection() {
-  const [activeVideo, setActiveVideo] = useState<Video | null>(null)
   const [showRequestModal, setShowRequestModal] = useState(false)
   const [isSubmittingRequest, setIsSubmittingRequest] = useState(false)
   const [requestSuccess, setRequestSuccess] = useState(false)
@@ -56,7 +56,6 @@ export default function VideoSection() {
       })
     } catch (err) {
       console.error('Failed to submit song request:', err)
-      // Fallback display success anyway so user experience is smooth
       setRequestSuccess(true)
     } finally {
       setIsSubmittingRequest(false)
@@ -72,11 +71,11 @@ export default function VideoSection() {
       <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* SECTION HEADER — CONCERT LED FLICKER LIGHTS (FILTERS REMOVED) */}
+        {/* SECTION HEADER — CONCERT LED FLICKER LIGHTS WITH STATIC */}
         <div className="mb-16 pb-8 border-b border-white/10 text-center md:text-left">
           <div className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-[#888] uppercase mb-3">
             <span className="w-2 h-2 bg-white rounded-full" />
-            <span>ARCHIVED TAPES &amp; REELS</span>
+            <span>TIKTOK ARCHIVES · @JAKE_THEDRUMMER</span>
           </div>
           <h2
             className="text-[clamp(2.8rem,7vw,6rem)] font-black uppercase tracking-tight leading-none concert-led-text"
@@ -84,70 +83,85 @@ export default function VideoSection() {
           >
             THE FOOTAGE
           </h2>
+          <p className="font-mono text-xs text-[#888] mt-2 uppercase tracking-widest">
+            ORDERED FROM MOST RECENTLY POSTED TO LEAST · CLICK ANY TAPE TO OPEN ITS DEDICATED PAGE
+          </p>
         </div>
 
-        {/* VIDEOS GRID — WORN TOUR POSTER CARDS */}
+        {/* VIDEOS GRID — EACH LEADS TO A SEPARATE PAGE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {videos.map((video, idx) => (
-            <div
+          {videos.map((video) => (
+            <Link
               key={video.id}
-              className="worn-frame group flex flex-col justify-between p-4 transition-all duration-200 hover:-translate-y-1.5 hover:border-white/50"
+              href={`/footage/${video.id}`}
+              className="worn-frame group flex flex-col justify-between p-4 transition-all duration-200 hover:-translate-y-2 hover:border-white/60 block relative cursor-pointer"
             >
-              {/* Card Top Stamp & Badge */}
-              <div className="flex items-center justify-between mb-3 font-mono text-[10px] text-[#777]">
-                <span className="uppercase tracking-widest text-[#aaa]">
-                  TAPE 0{idx + 1} // {video.category.toUpperCase()}
-                </span>
-                <span className="border border-white/20 px-2 py-0.5 text-white/90">
-                  4K REC
-                </span>
-              </div>
+              {/* Corner Tape Detail */}
+              <div className="tape-corner-tl" />
 
-              {/* Video Thumbnail / Preview Box */}
-              <div
-                onClick={() => setActiveVideo(video)}
-                className="relative aspect-video bg-[#050505] border border-white/15 overflow-hidden cursor-pointer group/thumb flex items-center justify-center"
-              >
-                {/* Simulated scanlines */}
-                <div className="absolute inset-0 crt-lines pointer-events-none z-10 opacity-40" />
-
-                {/* Video Play Overlay */}
-                <div className="relative z-20 w-14 h-14 rounded-full border border-white/40 bg-black/70 flex items-center justify-center pl-1 group-hover/thumb:scale-110 group-hover/thumb:bg-white group-hover/thumb:text-black group-hover/thumb:border-white text-white transition-all duration-200 shadow-[0_0_20px_rgba(0,0,0,0.8)]">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="6,4 20,12 6,20" />
-                  </svg>
-                </div>
-
-                {/* Category Graphic Tag */}
-                <div className="absolute bottom-2 left-2 z-20 font-mono text-[9px] tracking-widest uppercase bg-black/80 text-[#ddd] px-2 py-0.5 border border-white/15">
-                  {video.category === 'cinematic' ? 'FILM CUT' : 'FIRST-PERSON POV'}
-                </div>
-              </div>
-
-              {/* Title & Info */}
-              <div className="mt-4 pt-3 border-t border-white/10">
-                <h3
-                  className="text-2xl font-black uppercase tracking-tight text-[#f2f2f2] group-hover:text-white transition-colors"
-                  style={{ fontFamily: 'var(--font-poster)' }}
-                >
-                  {video.title}
-                </h3>
-                <p className="font-mono text-xs text-[#888] mt-1 line-clamp-2">
-                  {video.description}
-                </p>
-
-                <div className="mt-4 flex items-center justify-between font-mono text-[10px] text-[#666]">
-                  <span className="uppercase tracking-widest text-[#aaa] group-hover:text-white transition-colors flex items-center gap-1">
-                    PLAY TRACK <span>↗</span>
+              <div>
+                {/* Card Top Stamp & Badge */}
+                <div className="flex items-center justify-between mb-3 font-mono text-[10px] text-[#777]">
+                  <span className="uppercase tracking-widest text-[#aaa]">
+                    TAPE 0{video.order} // {video.date.toUpperCase()}
                   </span>
-                  <span>THEJACOBPARSONS.COM</span>
+                  <span className="border border-white/20 px-2 py-0.5 text-white/90">
+                    {video.category === 'pov' ? '4K POV' : 'CINEMATIC'}
+                  </span>
+                </div>
+
+                {/* Video Thumbnail / Preview Box */}
+                <div className="relative aspect-video bg-[#050505] border border-white/15 overflow-hidden group-hover:border-white/40 transition-colors flex items-center justify-center">
+                  {/* Simulated scanlines */}
+                  <div className="absolute inset-0 crt-lines pointer-events-none z-10 opacity-40" />
+
+                  {/* Video Play Overlay */}
+                  <div className="relative z-20 w-14 h-14 rounded-full border border-white/40 bg-black/70 flex items-center justify-center pl-1 group-hover:scale-110 group-hover:bg-white group-hover:text-black group-hover:border-white text-white transition-all duration-200 shadow-[0_0_20px_rgba(0,0,0,0.8)]">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="6,4 20,12 6,20" />
+                    </svg>
+                  </div>
+
+                  {/* Category Graphic Tag */}
+                  <div className="absolute bottom-2 left-2 z-20 font-mono text-[9px] tracking-widest uppercase bg-black/80 text-[#ddd] px-2 py-0.5 border border-white/15">
+                    {video.category === 'cinematic' ? 'FILM CUT' : 'FIRST-PERSON POV'}
+                  </div>
+
+                  {/* Date Tag */}
+                  <div className="absolute top-2 right-2 z-20 font-mono text-[9px] tracking-widest uppercase bg-black/80 text-[#aaa] px-2 py-0.5 border border-white/10">
+                    {video.date}
+                  </div>
+                </div>
+
+                {/* Title & Info */}
+                <div className="mt-4 pt-3 border-t border-white/10">
+                  <h3
+                    className="text-2xl font-black uppercase tracking-tight text-[#f2f2f2] group-hover:text-white transition-colors leading-tight"
+                    style={{ fontFamily: 'var(--font-poster)' }}
+                  >
+                    {video.title}
+                  </h3>
+                  <p className="font-mono text-xs text-[#aaa] mt-1">
+                    {video.subtitle}
+                  </p>
+                  <p className="font-mono text-[11px] text-[#777] mt-2 line-clamp-2">
+                    {video.description}
+                  </p>
                 </div>
               </div>
-            </div>
+
+              {/* Bottom Action Line */}
+              <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between font-mono text-[10px]">
+                <span className="uppercase tracking-widest text-white group-hover:underline flex items-center gap-1">
+                  VIEW FULL TAPE <span>→</span>
+                </span>
+                <span className="text-[#666]">@jake_thedrummer</span>
+              </div>
+            </Link>
           ))}
         </div>
 
-        {/* SONG COVER REQUEST BUTTON (REPLACED THE OLD BOX) */}
+        {/* SONG COVER REQUEST BUTTON */}
         <div className="mt-20 text-center">
           <button
             onClick={() => {
@@ -245,7 +259,7 @@ export default function VideoSection() {
 
                 <div>
                   <label className="block font-mono text-[10px] uppercase tracking-widest text-[#888] mb-1">
-                    YOUTUBE / SPOTIFY LINK (OPTIONAL)
+                    YOUTUBE / SPOTIFY / TIKTOK LINK (OPTIONAL)
                   </label>
                   <input
                     value={formData.songUrl}
@@ -324,39 +338,6 @@ export default function VideoSection() {
           </div>
         </div>
       )}
-
-      {/* POPUP MODAL FOR FULLSCREEN VIDEO PLAYBACK */}
-      {activeVideo && (
-        <div className="fixed inset-0 z-[150] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="worn-frame w-full max-w-4xl p-2 relative bg-[#090909]">
-            <button
-              onClick={() => setActiveVideo(null)}
-              className="absolute -top-10 right-0 text-white font-mono text-xs tracking-widest uppercase bg-black/80 border border-white/20 px-3 py-1 hover:bg-white hover:text-black transition-colors"
-            >
-              CLOSE [ESC] ✕
-            </button>
-
-            <div className="aspect-video w-full bg-black">
-              <iframe
-                src={`https://www.youtube.com/embed/${activeVideo.youtubeId || 'dQw4w9WgXcQ'}?autoplay=1&rel=0`}
-                title={activeVideo.title}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-
-            <div className="p-4 flex items-center justify-between font-mono text-xs text-[#aaa]">
-              <span className="font-bold text-white uppercase">{activeVideo.title}</span>
-              <span>{videoCategoryBadge(activeVideo.category)}</span>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   )
-}
-
-function videoCategoryBadge(cat: string) {
-  return cat === 'cinematic' ? 'CINEMATIC FILM' : 'POV DRUM CAM'
 }
