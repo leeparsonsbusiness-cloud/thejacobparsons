@@ -40,7 +40,7 @@ export default function AboutSection() {
                 {/* Top Corner Technical Stamping */}
                 <div className="relative z-20 flex items-center justify-between font-mono text-[10px] text-white/90">
                   <span className="bg-black/80 px-2.5 py-1 border border-white/20 backdrop-blur-sm uppercase">
-                    STAGE CAM // BEHIND THE KIT
+                    STAGE CAM // ABOUT ME
                   </span>
                   <span className="bg-black/80 px-2.5 py-1 border border-white/20 backdrop-blur-sm uppercase">
                     LIVE REEL
@@ -84,7 +84,7 @@ export default function AboutSection() {
                 className="text-[clamp(2.8rem,7vw,5.5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-[0.9] shadow-white-text"
                 style={{ fontFamily: 'var(--font-poster)' }}
               >
-                BEHIND<br />THE KIT
+                ABOUT<br />ME
               </h2>
             </div>
 

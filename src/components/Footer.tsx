@@ -30,7 +30,7 @@ export default function Footer() {
             [ VIDEOS ]
           </a>
           <a href="#about" className="hover:text-white transition-colors">
-            [ BEHIND THE KIT ]
+            [ ABOUT ME ]
           </a>
           <Link href="/merch" className="hover:text-white transition-colors">
             [ TOUR MERCH ]

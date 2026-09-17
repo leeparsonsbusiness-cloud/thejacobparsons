@@ -17,7 +17,7 @@ export default function Navbar() {
 
   const navLinks = [
     { label: 'VIDEOS', href: '#videos' },
-    { label: 'BEHIND THE KIT', href: '#about' },
+    { label: 'ABOUT ME', href: '#about' },
     { label: 'MERCH DROP', href: '/merch' },
     { label: 'BOOKING / COLLAB', href: '#contact' },
   ]
