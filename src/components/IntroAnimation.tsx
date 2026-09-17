@@ -205,6 +205,12 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const mount = containerRef.current
     mount.appendChild(renderer.domElement)
 
+    if (typeof window !== 'undefined') {
+      ;(window as any).__threeScene = scene
+      ;(window as any).__threeRenderer = renderer
+      ;(window as any).__threeCamera = camera
+    }
+
     // --- CINEMATIC LIGHTING (Studio High-Contrast Setup) ---
     // Ambient fill
     const ambientLight = new THREE.AmbientLight(0x404048, 1.2)
@@ -248,12 +254,16 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const stickGroup1 = new THREE.Group()
     const mesh1 = new THREE.Mesh(stickGeometry, drumstickMaterial)
     stickGroup1.add(mesh1)
+    stickGroup1.position.set(-3.2, -1.2, -16)
+    stickGroup1.rotation.set(Math.PI * 0.38, -0.08, 0.05)
     scene.add(stickGroup1)
 
     // Stick 2 (Right projectile)
     const stickGroup2 = new THREE.Group()
     const mesh2 = new THREE.Mesh(stickGeometry, drumstickMaterial)
     stickGroup2.add(mesh2)
+    stickGroup2.position.set(3.8, 1.4, -18)
+    stickGroup2.rotation.set(Math.PI * 0.37, 0.1, -0.05)
     scene.add(stickGroup2)
 
     // --- MATRIX BULLET-TIME AIR WAKE / SHOCKWAVE RINGS ---
@@ -347,8 +357,14 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         bulletT = 1.0
       }
 
+      // Dynamic pitch transition:
+      // In bullet-time, pitch is ~68° (Math.PI * 0.38) so full 3D body and grain are visible.
+      // Near impact (1.55s - 1.7s), pitch snaps to 88° (Math.PI * 0.49) to hit the lens glass tip-first!
+      const impactAlignT = Math.min(1, Math.max(0, (elapsed - 1.48) / 0.22))
+      const pitch1 = THREE.MathUtils.lerp(Math.PI * 0.38, Math.PI * 0.49, impactAlignT)
+      const pitch2 = THREE.MathUtils.lerp(Math.PI * 0.37, Math.PI * 0.49, impactAlignT)
+
       // --- STICK 1 (LEFT THROWN DRUMSTICK: Flying head-on at the viewer) ---
-      // Travels from Z = -16 to Z = 2.4 (Tip starts at Z = -10.95, ends at Z = 7.45 right against camera Z = 7.5!)
       const s1StartZ = -16
       const s1EndZ = 2.4
       const s1Z = s1StartZ + bulletT * (s1EndZ - s1StartZ)
@@ -359,10 +375,10 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       // Authentic bullet rifling spin around the stick's own axis:
       mesh1.rotation.y = elapsed * 26.0
 
-      // StickGroup points stick towards viewer (+90 deg on X) with subtle corkscrew drift
-      const wobble1X = Math.PI * 0.5 + Math.sin(elapsed * 2.5) * 0.06
-      const wobble1Y = -0.06 + Math.cos(elapsed * 2.0) * 0.08
-      const wobble1Z = Math.sin(elapsed * 1.8) * 0.04
+      // Dynamic pitch & corkscrew wobble
+      const wobble1X = pitch1 + Math.sin(elapsed * 2.5) * 0.05 * (1 - impactAlignT)
+      const wobble1Y = -0.08 * (1 - impactAlignT) + Math.cos(elapsed * 2.0) * 0.06 * (1 - impactAlignT)
+      const wobble1Z = Math.sin(elapsed * 1.8) * 0.04 * (1 - impactAlignT)
       stickGroup1.rotation.set(wobble1X, wobble1Y, wobble1Z)
 
       // --- STICK 2 (RIGHT THROWN DRUMSTICK: Crossing trajectory) ---
@@ -376,9 +392,9 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       // Counter-rotating rifling spin
       mesh2.rotation.y = -elapsed * 28.0
 
-      const wobble2X = Math.PI * 0.5 + Math.sin(elapsed * 2.2 + 1.2) * 0.07
-      const wobble2Y = 0.08 + Math.cos(elapsed * 1.7 + 0.8) * 0.09
-      const wobble2Z = -Math.sin(elapsed * 1.5) * 0.05
+      const wobble2X = pitch2 + Math.sin(elapsed * 2.2 + 1.2) * 0.06 * (1 - impactAlignT)
+      const wobble2Y = 0.09 * (1 - impactAlignT) + Math.cos(elapsed * 1.7 + 0.8) * 0.07 * (1 - impactAlignT)
+      const wobble2Z = -Math.sin(elapsed * 1.5) * 0.05 * (1 - impactAlignT)
       stickGroup2.rotation.set(wobble2X, wobble2Y, wobble2Z)
 
       // --- MATRIX DUST DRIFT ---
