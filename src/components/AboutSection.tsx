@@ -76,10 +76,6 @@ export default function AboutSection() {
           {/* EDITORIAL / ASTROWORLD STREETWEAR COPY */}
           <div className="lg:col-span-6 space-y-8">
             <div>
-              <div className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-[#888] uppercase mb-2">
-                <span className="w-2 h-2 bg-white rounded-full" />
-                <span>ARTIST STATEMENT</span>
-              </div>
               <h2
                 className="text-[clamp(2.8rem,7vw,5.5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-[0.9] shadow-white-text"
                 style={{ fontFamily: 'var(--font-poster)' }}
