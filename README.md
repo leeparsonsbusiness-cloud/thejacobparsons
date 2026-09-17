@@ -1,8 +1,21 @@
 # Jake The Drummer — thejacobparsons.com
 
-Personal website for **Jake The Drummer** — cinematic drum covers, first-person POV sessions, and more.
+Official website for **Jake The Drummer** — heavy-hitting drum covers, 4K first-person POV sessions, and cinematic film productions.
 
-Built with **Next.js 16** + **Tailwind CSS v4**, deployed on **Vercel**.
+Built with **Next.js 16 (Turbopack)** + **Tailwind CSS v4**, deployed on **Vercel**.
+
+---
+
+## Live Features
+
+- **3D 5A Drumstick Intro Sequence**: Arena stage opener, volumetric spotlight, spinning 3D 5A Hickory stick flying towards the screen, slow motion ember sparkles, letter-by-letter wood burning iron effect, and splintering crack shockwave explosion.
+- **Concert LED Flickering Headings**: High-voltage electric stage LED lights effect on main landing heading and footage section.
+- **Beat-up / Worn Video Frame**: Viewfinder HUD (`REC ● 4K 60FPS // CH-01`), CRT scanline toggle, and audio waveform meter ready for custom drum footage.
+- **Archived Footage**: High-definition video gallery with responsive fullscreen modal player.
+- **Song Cover Request Pop-up Modal**: Interactive form allowing fans to submit song suggestions, streaming links, and cover style preferences directly to `parsonsjacob30@gmail.com`.
+- **Behind the Kit**: Dramatic performance shot silhouette, artist statement, and gear specifications (5A hickory sticks, birch shells, 4K 60fps chest/head mounts, 24-bit raw stems).
+- **Tour Merch Drop (`/merch`)**: Vintage wash heavyweight concert tee mockup preview and VIP backstage ticket stub early access signup.
+- **Booking & Collab Production Rider**: Validated project inquiry form forwarding directly to `parsonsjacob30@gmail.com`.
 
 ---
 
@@ -25,30 +38,31 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # Root layout (fonts, metadata)
-│   ├── page.tsx            # Homepage (with intro animation)
-│   ├── globals.css         # Global styles + Tailwind
+│   ├── api/
+│   │   └── submit/route.ts  # Dispatches song requests & inquiries to parsonsjacob30@gmail.com
+│   ├── layout.tsx           # Root layout
+│   ├── page.tsx             # Homepage with 3D intro animation
+│   ├── globals.css          # Concert LED flicker keyframes & Astroworld grunge styling
 │   └── merch/
-│       └── page.tsx        # Merch Coming Soon page
+│       └── page.tsx         # Tour Merch Drop 001 Coming Soon page
 ├── components/
-│   ├── IntroAnimation.tsx  # Cinematic drumstick intro sequence
-│   ├── Navbar.tsx          # Fixed navbar with mobile menu
-│   ├── Hero.tsx            # Full-screen hero section
-│   ├── VideoSection.tsx    # Cinematic + POV video grids
-│   ├── AboutSection.tsx    # Bio section
-│   ├── SocialsSection.tsx  # Instagram / TikTok / Facebook cards
-│   ├── SupportSection.tsx  # Ko-fi / PayPal tip section
-│   ├── ContactSection.tsx  # Contact form
-│   └── Footer.tsx          # Site footer
+│   ├── IntroAnimation.tsx   # 3D 5A drumstick arena opener animation
+│   ├── Navbar.tsx           # Fixed concert navigation
+│   ├── Hero.tsx             # Concert LED lights header & worn video box
+│   ├── VideoSection.tsx     # Footage cards & Song Request Pop-up modal
+│   ├── AboutSection.tsx     # Behind the kit performance shot & gear specs
+│   ├── SocialsSection.tsx   # Instagram / TikTok / Facebook dispatch hub
+│   ├── ContactSection.tsx   # Booking & collab production rider form
+│   └── Footer.tsx           # Tour poster footer
 └── data/
-    └── videos.ts           # ← UPDATE YOUR VIDEO IDs HERE
+    └── videos.ts            # Video data entries & YouTube IDs
 ```
 
 ---
 
 ## How to Update Your Videos
 
-Open [`src/data/videos.ts`](./src/data/videos.ts) and update each entry with your real YouTube video IDs and titles:
+Open [`src/data/videos.ts`](./src/data/videos.ts) and update each entry with your YouTube video IDs and titles:
 
 ```ts
 {
@@ -60,80 +74,19 @@ Open [`src/data/videos.ts`](./src/data/videos.ts) and update each entry with you
 },
 ```
 
-The YouTube video ID is the part after `?v=` in the URL. For example:
-- `https://youtube.com/watch?v=dQw4w9WgXcQ` → ID is `dQw4w9WgXcQ`
-
 ---
 
 ## How to Update Social Links
 
 Open [`src/components/SocialsSection.tsx`](./src/components/SocialsSection.tsx) and update each platform's `handle` and `url` fields with your real links.
 
-Same for [`src/components/Footer.tsx`](./src/components/Footer.tsx).
-
----
-
-## How to Set Up Tips / Support
-
-Open [`src/components/SupportSection.tsx`](./src/components/SupportSection.tsx) and update:
-- Ko-fi URL: `https://ko-fi.com/YOUR_USERNAME`
-- PayPal.me URL: `https://paypal.me/YOUR_USERNAME`
-
----
-
-## How to Add Your Photo
-
-In [`src/components/AboutSection.tsx`](./src/components/AboutSection.tsx), replace the placeholder `<div>` with:
-
-```tsx
-import Image from 'next/image'
-
-<Image
-  src="/your-photo.jpg"
-  alt="Jake The Drummer"
-  fill
-  className="object-cover"
-  priority
-/>
-```
-
-Place your photo in the `public/` directory.
-
----
-
-## How to Wire Up the Contact Form
-
-The contact form in [`src/components/ContactSection.tsx`](./src/components/ContactSection.tsx) currently logs to console. To make it actually send emails, use **Formspree**:
-
-1. Create a free form at [formspree.io](https://formspree.io)
-2. Replace the `onSubmit` handler:
-
-```ts
-const onSubmit = async (data: FormData) => {
-  await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-}
-```
-
 ---
 
 ## Deployment (Vercel)
 
-1. Push this repo to GitHub
-2. Go to [vercel.com](https://vercel.com) → **New Project** → import your repo
-3. Hit **Deploy** (no config needed — Vercel auto-detects Next.js)
-4. In Vercel dashboard → **Settings → Domains** → add `thejacobparsons.com`
-5. Update your domain's DNS at your registrar:
-   - Add a **CNAME** record: `www` → `cname.vercel-dns.com`
-   - Add an **A** record: `@` → `76.76.21.21`
-
----
-
-## Intro Animation
-
-The cinematic intro plays **once per browser session** (stored in `sessionStorage`). To reset it, clear sessionStorage or open an incognito window.
-
-To disable it entirely, remove `<IntroAnimation ... />` from `src/app/page.tsx`.
+1. Connect your repository `https://github.com/leeparsonsbusiness-cloud/thejacobparsons` on [vercel.com](https://vercel.com).
+2. Hit **Deploy** (auto-detected Next.js configuration).
+3. In Vercel Project Settings → **Domains** → add `thejacobparsons.com`.
+4. Update your DNS records at your domain registrar:
+   - **CNAME**: `www` → `cname.vercel-dns.com`
+   - **A Record**: `@` → `76.76.21.21`
