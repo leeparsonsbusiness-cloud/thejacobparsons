@@ -1,41 +1,154 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import * as THREE from 'three'
 
 interface IntroAnimationProps {
   onComplete: () => void
 }
 
+/**
+ * Procedurally generates a photorealistic American Hickory wood grain texture
+ * with realistic fibers, satin finish, and custom laser-etched "JAKE PARSONS" 5A branding.
+ */
+function createHickoryTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas')
+  canvas.width = 1024
+  canvas.height = 512
+  const ctx = canvas.getContext('2d')!
+
+  // 1. Base Hickory Wood Tone Gradient (circumference along Y, length along X)
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height)
+  grad.addColorStop(0.0, '#362315')
+  grad.addColorStop(0.08, '#6e4c2f')
+  grad.addColorStop(0.22, '#bc966a')
+  grad.addColorStop(0.5, '#f4e0c4') // Highlights on the wood cylinder
+  grad.addColorStop(0.78, '#b89165')
+  grad.addColorStop(0.92, '#5e3e23')
+  grad.addColorStop(1.0, '#2d1b10')
+  ctx.fillStyle = grad
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+  // 2. Fine longitudinal wood fibers and grain rings
+  const grainCount = 380
+  for (let i = 0; i < grainCount; i++) {
+    const y = Math.random() * canvas.height
+    const alpha = 0.03 + Math.random() * 0.09
+    const isDark = Math.random() > 0.35
+    ctx.strokeStyle = isDark ? `rgba(40, 24, 12, ${alpha})` : `rgba(255, 245, 230, ${alpha * 0.8})`
+    ctx.lineWidth = 0.5 + Math.random() * 2.2
+
+    ctx.beginPath()
+    let currY = y
+    ctx.moveTo(0, currY)
+    for (let x = 0; x <= canvas.width; x += 32) {
+      currY += (Math.random() - 0.5) * 2.5
+      ctx.lineTo(x, currY)
+    }
+    ctx.stroke()
+  }
+
+  // 3. Wood Pores and Natural Grain Imperfections
+  for (let p = 0; p < 600; p++) {
+    const px = Math.random() * canvas.width
+    const py = Math.random() * canvas.height
+    const pLen = 3 + Math.random() * 14
+    ctx.fillStyle = 'rgba(45, 25, 12, 0.12)'
+    ctx.fillRect(px, py, pLen, 0.8)
+  }
+
+  // 4. Lathe Micro-grooves / Turning Tool Lines
+  const latheLines = [60, 140, 220, 310, 480, 620, 750, 890]
+  latheLines.forEach((lx) => {
+    ctx.strokeStyle = 'rgba(35, 20, 10, 0.18)'
+    ctx.lineWidth = 1.2
+    ctx.beginPath()
+    ctx.moveTo(lx, 0)
+    ctx.lineTo(lx, canvas.height)
+    ctx.stroke()
+  })
+
+  // 5. Laser-etched 5A Branding along handle shaft (X ~ 140 to 440, center Y)
+  ctx.save()
+  const centerY = canvas.height * 0.5
+
+  // Brand Badge Border
+  ctx.strokeStyle = 'rgba(28, 16, 8, 0.75)'
+  ctx.lineWidth = 1.5
+  ctx.strokeRect(170, centerY - 42, 290, 84)
+  ctx.strokeRect(173, centerY - 39, 284, 78)
+
+  // Top model tag
+  ctx.fillStyle = 'rgba(28, 16, 8, 0.85)'
+  ctx.font = 'bold 15px "Courier New", Courier, monospace'
+  ctx.textAlign = 'center'
+  ctx.fillText('★  5A AMERICAN HICKORY  ★', 315, centerY - 18)
+
+  // Artist Name in bold
+  ctx.font = '900 24px "Impact", "Arial Black", sans-serif'
+  ctx.letterSpacing = '3px'
+  ctx.fillText('JAKE PARSONS', 315, centerY + 12)
+
+  // Sub-series
+  ctx.font = '10px "Courier New", Courier, monospace'
+  ctx.letterSpacing = '2px'
+  ctx.fillText('SIGNATURE // BULLET-SERIES', 315, centerY + 30)
+
+  ctx.restore()
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.ClampToEdgeWrapping
+  texture.generateMipmaps = true
+  texture.minFilter = THREE.LinearMipmapLinearFilter
+  return texture
+}
+
+/**
+ * Creates the true 3D Lathe geometry for a standard 5A American Hickory drumstick
+ * with precise butt cap, taper, neck, and acorn tip.
+ */
+function create5ADrumstickGeometry(): THREE.BufferGeometry {
+  const points: THREE.Vector2[] = [
+    new THREE.Vector2(0, 0), // Butt center
+    new THREE.Vector2(0.2, 0.1), // Butt bevel
+    new THREE.Vector2(0.28, 0.35), // Main shaft start
+    new THREE.Vector2(0.28, 6.8), // Main shaft length
+    new THREE.Vector2(0.25, 7.5), // Taper start
+    new THREE.Vector2(0.19, 8.3), // Taper shoulder
+    new THREE.Vector2(0.14, 9.1), // Slender neck
+    new THREE.Vector2(0.15, 9.3), // Acorn tip base
+    new THREE.Vector2(0.21, 9.7), // Acorn tip swelling
+    new THREE.Vector2(0.16, 10.0), // Acorn tip crown
+    new THREE.Vector2(0, 10.2), // Acorn tip point
+  ]
+
+  // 36 lathe segments produces silky-smooth cylindrical curvature
+  const geometry = new THREE.LatheGeometry(points, 36)
+  // Center geometry so rotation/tumble naturally pivots around physical center of mass
+  geometry.center()
+  return geometry
+}
+
+/**
+ * Air-wake / shockwave ring for Matrix bullet-time disturbance
+ */
+interface WakeRing {
+  mesh: THREE.Mesh
+  active: boolean
+  birthTime: number
+  originPos: THREE.Vector3
+  normal: THREE.Vector3
+}
+
 export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
-  // Animation state
-  const [phase, setPhase] = useState<'throw' | 'impact' | 'transition' | 'done'>('throw')
-  const [stick1, setStick1] = useState({
-    x: -180,
-    y: -70,
-    z: -2600,
-    scale: 0.05,
-    rx: 20,
-    ry: -35,
-    rz: -15,
-  })
-  const [stick2, setStick2] = useState({
-    x: 180,
-    y: 80,
-    z: -2800,
-    scale: 0.04,
-    rx: -40,
-    ry: 45,
-    rz: 50,
-  })
-  const [shake, setShake] = useState({ x: 0, y: 0, r: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [crackOpacity, setCrackOpacity] = useState(0)
+  const [impactFlash, setImpactFlash] = useState(0)
   const [shockwaveScale, setShockwaveScale] = useState(0)
   const [shockwaveOpacity, setShockwaveOpacity] = useState(0)
-  const [impactFlash, setImpactFlash] = useState(0)
-  const [crackOpacity, setCrackOpacity] = useState(0)
+  const [shake, setShake] = useState({ x: 0, y: 0, r: 0 })
   const [containerOpacity, setContainerOpacity] = useState(1)
-
-  const requestRef = useRef<number | null>(null)
-  const startTimeRef = useRef<number>(0)
   const completedRef = useRef(false)
 
   const handleSkip = () => {
@@ -47,129 +160,369 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     setContainerOpacity(0)
     setTimeout(() => {
       onComplete()
-    }, 250)
+    }, 200)
   }
 
   useEffect(() => {
+    // Keyboard shortcut ESC to skip
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleSkip()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+
     // Check if user already saw it in this session
     if (typeof window !== 'undefined' && sessionStorage.getItem('jake-intro-seen') === '1') {
       onComplete()
-      return
+      return () => {
+        window.removeEventListener('keydown', onKeyDown)
+      }
     }
 
-    startTimeRef.current = performance.now()
+    if (!containerRef.current) return
 
-    const animate = (now: number) => {
-      const elapsed = (now - startTimeRef.current) / 1000 // seconds
+    // --- THREE.JS SCENE SETUP ---
+    const width = window.innerWidth
+    const height = window.innerHeight
 
-      // 1. THROW PHASE (0.0s -> 1.35s) — Sticks hurtle towards screen
-      if (elapsed < 1.35) {
-        setPhase('throw')
-        const t = Math.min(1, elapsed / 1.35)
-        // Aggressive cinematic ease-in acceleration (t^2.4)
-        const easeIn = Math.pow(t, 2.4)
+    const scene = new THREE.Scene()
+    scene.fog = new THREE.FogExp2(0x050505, 0.02)
 
-        // Stick 1 (Left stick, tumbling end-over-end)
-        setStick1({
-          x: -180 * (1 - easeIn) - 60 * easeIn,
-          y: -70 * (1 - easeIn) - 20 * easeIn,
-          z: -2600 + easeIn * 2650, // Ends close to screen
-          scale: 0.05 + easeIn * 1.35,
-          rx: 20 + t * 940,
-          ry: -35 + t * 520,
-          rz: -15 + t * 760,
-        })
+    const camera = new THREE.PerspectiveCamera(48, width / height, 0.1, 1000)
+    camera.position.set(0, 0, 10)
 
-        // Stick 2 (Right stick, crossing corkscrew spin)
-        setStick2({
-          x: 180 * (1 - easeIn) + 40 * easeIn,
-          y: 80 * (1 - easeIn) + 30 * easeIn,
-          z: -2800 + easeIn * 2850,
-          scale: 0.04 + easeIn * 1.4,
-          rx: -40 + t * 800,
-          ry: 45 + t * 1050,
-          rz: 50 - t * 680,
-        })
-      } 
-      // 2. IMPACT MOMENT (1.35s -> 1.75s) — Sticks strike the camera glass!
-      else if (elapsed >= 1.35 && elapsed < 1.75) {
-        setPhase('impact')
-        const impactTime = elapsed - 1.35
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: 'high-performance',
+    })
+    renderer.setSize(width, height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.25
+
+    const mount = containerRef.current
+    mount.appendChild(renderer.domElement)
+
+    // --- LIGHTING ---
+    // Ambient fill
+    const ambientLight = new THREE.AmbientLight(0x222228, 0.8)
+    scene.add(ambientLight)
+
+    // Crisp high-intensity key spotlight (illuminating cylindrical surface)
+    const keySpotlight = new THREE.SpotLight(0xffffff, 45, 120, Math.PI / 4, 0.35)
+    keySpotlight.position.set(5, 12, 14)
+    scene.add(keySpotlight)
+
+    // Cool Matrix-cyan rim backlight (razor edge highlight on drumstick contours)
+    const rimLight = new THREE.DirectionalLight(0x70d8ff, 3.2)
+    rimLight.position.set(-8, -4, -10)
+    scene.add(rimLight)
+
+    // Warm amber bounce light
+    const bounceLight = new THREE.DirectionalLight(0xffb070, 1.8)
+    bounceLight.position.set(8, -6, 4)
+    scene.add(bounceLight)
+
+    // Dynamic point light following the impact zone
+    const impactPointLight = new THREE.PointLight(0xffffff, 0, 20)
+    impactPointLight.position.set(0, 0, 2)
+    scene.add(impactPointLight)
+
+    // --- 3D 5A DRUMSTICK MESHES ---
+    const stickGeometry = create5ADrumstickGeometry()
+    const hickoryTexture = createHickoryTexture()
+
+    // MeshPhysicalMaterial for authentic lustrous wooden lacquer
+    const drumstickMaterial = new THREE.MeshPhysicalMaterial({
+      map: hickoryTexture,
+      roughness: 0.28,
+      metalness: 0.04,
+      clearcoat: 0.85,
+      clearcoatRoughness: 0.16,
+      reflectivity: 0.65,
+    })
+
+    // Drumstick 1 (Left stick)
+    const stick1 = new THREE.Mesh(stickGeometry, drumstickMaterial)
+    scene.add(stick1)
+
+    // Drumstick 2 (Right stick)
+    const stick2 = new THREE.Mesh(stickGeometry, drumstickMaterial)
+    scene.add(stick2)
+
+    // --- MATRIX BULLET-TIME AIR WAKE / SHOCKWAVE RINGS ---
+    // Conical air wake disturbance rings trailing the sticks
+    const ringGeometry = new THREE.TorusGeometry(0.5, 0.035, 16, 36)
+    const wakeRings: WakeRing[] = []
+    const MAX_RINGS = 32
+
+    for (let i = 0; i < MAX_RINGS; i++) {
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x90e8ff,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      })
+      const mesh = new THREE.Mesh(ringGeometry, ringMat)
+      mesh.visible = false
+      scene.add(mesh)
+      wakeRings.push({
+        mesh,
+        active: false,
+        birthTime: 0,
+        originPos: new THREE.Vector3(),
+        normal: new THREE.Vector3(0, 0, 1),
+      })
+    }
+
+    let nextRingIdx = 0
+    const spawnWakeRing = (pos: THREE.Vector3, dir: THREE.Vector3, time: number) => {
+      const ring = wakeRings[nextRingIdx]
+      nextRingIdx = (nextRingIdx + 1) % MAX_RINGS
+      ring.active = true
+      ring.birthTime = time
+      ring.originPos.copy(pos)
+      ring.mesh.position.copy(pos)
+      ring.mesh.scale.set(0.6, 0.6, 0.6)
+      ring.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), dir.clone().normalize())
+      ring.mesh.visible = true
+      ;(ring.mesh.material as THREE.MeshBasicMaterial).opacity = 0.85
+    }
+
+    // --- SUSPENDED MATRIX DUST PARTICLES ---
+    const dustCount = 300
+    const dustGeo = new THREE.BufferGeometry()
+    const dustPositions = new Float32Array(dustCount * 3)
+    for (let i = 0; i < dustCount; i++) {
+      dustPositions[i * 3] = (Math.random() - 0.5) * 22
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 16
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 40 - 5
+    }
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3))
+    const dustMat = new THREE.PointsMaterial({
+      color: 0xa0e4ff,
+      size: 0.08,
+      transparent: true,
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending,
+    })
+    const dustParticles = new THREE.Points(dustGeo, dustMat)
+    scene.add(dustParticles)
+
+    // --- ANIMATION TIMING & LOOP ---
+    const startTime = performance.now()
+    let animationFrameId: number
+    let lastRingSpawnTime = 0
+
+    const tipOffset = new THREE.Vector3(0, 4.9, 0) // Local tip location in lathe geometry
+
+    const animate = (timestamp: number) => {
+      const elapsed = (timestamp - startTime) / 1000 // elapsed seconds
+
+      // -------------------------------------------------------------
+      // 1. THE THROW & BULLET-TIME SLOW-MO SPEED RAMP
+      // -------------------------------------------------------------
+      let bulletT: number
+      if (elapsed < 0.3) {
+        // Fast approach
+        bulletT = (elapsed / 0.3) * 0.22
+      } else if (elapsed < 1.55) {
+        // Matrix Bullet-time dilation
+        const norm = (elapsed - 0.3) / 1.25
+        bulletT = 0.22 + norm * 0.63
+      } else if (elapsed < 1.7) {
+        // Sudden surge into point blank lens
+        const norm = (elapsed - 1.55) / 0.15
+        bulletT = 0.85 + Math.pow(norm, 2.2) * 0.15
+      } else {
+        bulletT = 1.0
+      }
+
+      // --- STICK 1 (LEFT THROWN DRUMSTICK: Corkscrews and aims tip towards viewer) ---
+      const s1StartZ = -48
+      const s1EndZ = 1.2
+      const s1Z = s1StartZ + bulletT * (s1EndZ - s1StartZ)
+      const s1X = -5.5 * (1 - bulletT) - 0.4 * bulletT
+      const s1Y = -2.2 * (1 - bulletT) - 0.1 * bulletT
+
+      stick1.position.set(s1X, s1Y, s1Z)
+
+      // Corkscrew tumble with rifle-bullet axial spin
+      const spinAngle = elapsed * 9.5
+      stick1.rotation.set(
+        Math.PI * 0.48 + Math.sin(elapsed * 2.8) * 0.25,
+        Math.sin(elapsed * 1.5) * 0.35,
+        spinAngle
+      )
+
+      // --- STICK 2 (RIGHT THROWN DRUMSTICK: Crossing trajectory, tumbling diagonally) ---
+      const s2StartZ = -52
+      const s2EndZ = 1.1
+      const s2Z = s2StartZ + bulletT * (s2EndZ - s2StartZ)
+      const s2X = 6.2 * (1 - bulletT) + 0.35 * bulletT
+      const s2Y = 2.4 * (1 - bulletT) + 0.15 * bulletT
+
+      stick2.position.set(s2X, s2Y, s2Z)
+
+      const spinAngle2 = -elapsed * 11.2
+      stick2.rotation.set(
+        -Math.PI * 0.46 + Math.cos(elapsed * 2.4) * 0.3,
+        Math.cos(elapsed * 1.8) * 0.4,
+        spinAngle2
+      )
+
+      // --- MATRIX DUST DRIFT ---
+      dustParticles.rotation.y = elapsed * 0.04
+      dustParticles.rotation.z = elapsed * 0.02
+
+      // --- MATRIX CAMERA BULLET-TIME ORBIT ---
+      if (elapsed < 1.7) {
+        // Slow cinematic camera float
+        camera.position.x = Math.sin(elapsed * 1.8) * 0.85
+        camera.position.y = Math.cos(elapsed * 1.4) * 0.6
+        camera.lookAt(0, 0, s1Z * 0.5)
+      }
+
+      // --- SPAWN MATRIX CONICAL AIR-WAKE SHOCKWAVES ---
+      if (elapsed > 0.15 && elapsed < 1.68) {
+        if (elapsed - lastRingSpawnTime > 0.045) {
+          lastRingSpawnTime = elapsed
+          // Get world positions of stick tips
+          const tip1World = tipOffset.clone().applyMatrix4(stick1.matrixWorld)
+          const forward1 = new THREE.Vector3(0, 0, 1)
+            .applyQuaternion(stick1.quaternion)
+            .normalize()
+          spawnWakeRing(tip1World, forward1, elapsed)
+
+          const tip2World = tipOffset.clone().applyMatrix4(stick2.matrixWorld)
+          const forward2 = new THREE.Vector3(0, 0, 1)
+            .applyQuaternion(stick2.quaternion)
+            .normalize()
+          spawnWakeRing(tip2World, forward2, elapsed)
+        }
+      }
+
+      // Update existing wake rings
+      wakeRings.forEach((ring) => {
+        if (!ring.active) return
+        const ringAge = elapsed - ring.birthTime
+        if (ringAge > 0.45) {
+          ring.active = false
+          ring.mesh.visible = false
+        } else {
+          const ringProgress = ringAge / 0.45
+          const currentScale = 0.6 + ringProgress * 3.8
+          ring.mesh.scale.set(currentScale, currentScale, currentScale)
+          const mat = ring.mesh.material as THREE.MeshBasicMaterial
+          mat.opacity = (1 - ringProgress) * 0.65
+        }
+      })
+
+      // -------------------------------------------------------------
+      // 2. POINT-BLANK SCREEN IMPACT MOMENT (1.70s -> 2.10s)
+      // -------------------------------------------------------------
+      if (elapsed >= 1.7 && elapsed < 2.1) {
+        const impactTime = elapsed - 1.7
         const normImpact = impactTime / 0.4 // 0 to 1
 
-        // Intense camera glass vibration
+        // Camera Glass Shake
         const shakeDecay = Math.max(0, 1 - normImpact)
-        const freq = impactTime * 70
+        const freq = impactTime * 65
         setShake({
-          x: Math.sin(freq) * 16 * shakeDecay,
-          y: Math.cos(freq * 1.3) * 14 * shakeDecay,
-          r: Math.sin(freq * 0.7) * 2.5 * shakeDecay,
+          x: Math.sin(freq) * 18 * shakeDecay,
+          y: Math.cos(freq * 1.4) * 15 * shakeDecay,
+          r: Math.sin(freq * 0.8) * 2.8 * shakeDecay,
         })
 
-        // Impact flash (instant spike then smooth falloff)
-        setImpactFlash(Math.max(0, 1 - normImpact * 1.6))
-
-        // Crack pattern appears instantly
+        // Glass crack overlay instantly visible
         setCrackOpacity(1)
 
-        // Radial Shockwave expands outwards
-        setShockwaveScale(normImpact * 3.5)
+        // Impact flash spike & point light flash
+        const flashIntensity = Math.max(0, 1 - normImpact * 2.0)
+        setImpactFlash(flashIntensity)
+        impactPointLight.intensity = flashIntensity * 120
+
+        // Expanding radial shockwave ring
+        setShockwaveScale(normImpact * 4.2)
         setShockwaveOpacity(Math.max(0, 1 - normImpact))
 
-        // Sticks violently deflect and bounce off the lens out of view
-        setStick1((prev) => ({
-          ...prev,
-          x: prev.x - normImpact * 280,
-          y: prev.y + normImpact * 360,
-          z: 80 - normImpact * 400,
-          rx: prev.rx + 25,
-          rz: prev.rz + 45,
-          scale: Math.max(0.2, 1.4 - normImpact * 0.8),
-        }))
+        // Sticks violently bounce off the lens glass
+        stick1.position.x -= normImpact * 4.5
+        stick1.position.y += normImpact * 3.2
+        stick1.position.z -= normImpact * 8.0
+        stick1.rotation.x += normImpact * 6
+        stick1.rotation.z += normImpact * 8
 
-        setStick2((prev) => ({
-          ...prev,
-          x: prev.x + normImpact * 300,
-          y: prev.y + normImpact * 320,
-          z: 80 - normImpact * 420,
-          rx: prev.rx - 30,
-          rz: prev.rz - 50,
-          scale: Math.max(0.2, 1.4 - normImpact * 0.8),
-        }))
-      } 
-      // 3. SEAMLESS DISSOLVE INTO WEBSITE (1.75s -> 2.3s)
-      else if (elapsed >= 1.75 && elapsed < 2.3) {
-        setPhase('transition')
-        const transTime = (elapsed - 1.75) / 0.55 // 0 to 1
+        stick2.position.x += normImpact * 5.0
+        stick2.position.y -= normImpact * 3.6
+        stick2.position.z -= normImpact * 8.5
+        stick2.rotation.x -= normImpact * 7
+        stick2.rotation.z -= normImpact * 9
+      }
+      // -------------------------------------------------------------
+      // 3. DISSOLVE INTO WEBSITE (2.10s -> 2.55s)
+      // -------------------------------------------------------------
+      else if (elapsed >= 2.1 && elapsed < 2.55) {
+        const transTime = (elapsed - 2.1) / 0.45
         setShake({ x: 0, y: 0, r: 0 })
         setContainerOpacity(Math.max(0, 1 - transTime))
-        setCrackOpacity(Math.max(0, 1 - transTime * 1.5))
+        setCrackOpacity(Math.max(0, 1 - transTime * 1.6))
         setShockwaveOpacity(0)
-      } 
-      // 4. COMPLETE
-      else if (elapsed >= 2.3) {
+      }
+      // -------------------------------------------------------------
+      // 4. ANIMATION COMPLETE
+      // -------------------------------------------------------------
+      else if (elapsed >= 2.55) {
         if (!completedRef.current) {
           completedRef.current = true
           if (typeof window !== 'undefined') {
             sessionStorage.setItem('jake-intro-seen', '1')
           }
-          setPhase('done')
           onComplete()
         }
         return
       }
 
-      requestRef.current = requestAnimationFrame(animate)
+      renderer.render(scene, camera)
+      animationFrameId = requestAnimationFrame(animate)
     }
 
-    requestRef.current = requestAnimationFrame(animate)
+    animationFrameId = requestAnimationFrame(animate)
 
+    // Handle Window Resizing
+    const handleResize = () => {
+      const newWidth = window.innerWidth
+      const newHeight = window.innerHeight
+      camera.aspect = newWidth / newHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(newWidth, newHeight)
+    }
+    window.addEventListener('resize', handleResize)
+
+    // Cleanup resources
     return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current)
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('resize', handleResize)
+      cancelAnimationFrame(animationFrameId)
+      if (mount && renderer.domElement.parentNode === mount) {
+        mount.removeChild(renderer.domElement)
+      }
+      renderer.dispose()
+      stickGeometry.dispose()
+      hickoryTexture.dispose()
+      drumstickMaterial.dispose()
+      ringGeometry.dispose()
+      wakeRings.forEach((r) => {
+        ;(r.mesh.material as THREE.Material).dispose()
+      })
+      dustGeo.dispose()
+      dustMat.dispose()
     }
   }, [onComplete])
-
-  if (phase === 'done') return null
 
   return (
     <div
@@ -179,76 +532,28 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         transform: `translate3d(${shake.x}px, ${shake.y}px, 0px) rotate(${shake.r}deg)`,
       }}
     >
-      {/* Stadium Atmospheric Backing: Soft Stage Spotlights & Drifting Smoke */}
+      {/* 3D WebGL Three.js Container */}
+      <div ref={containerRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+
+      {/* Atmospheric Stage Volumetric Backlight Effect */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Deep volumetric center light beam */}
         <div
-          className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[700px] md:w-[1000px] h-[150%] pointer-events-none"
+          className="absolute top-[-25%] left-1/2 -translate-x-1/2 w-[700px] md:w-[1100px] h-[160%] pointer-events-none opacity-40"
           style={{
             background:
-              'radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.22) 0%, rgba(200, 200, 200, 0.08) 35%, transparent 70%)',
-            clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
-            filter: 'blur(30px)',
-          }}
-        />
-
-        {/* Ambient arena stage rim lights */}
-        <div
-          className="absolute -top-1/4 -left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none opacity-20"
-          style={{
-            background: 'radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 60%)',
-            filter: 'blur(50px)',
-          }}
-        />
-        <div
-          className="absolute -top-1/4 -right-1/4 w-[600px] h-[600px] rounded-full pointer-events-none opacity-20"
-          style={{
-            background: 'radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, transparent 60%)',
-            filter: 'blur(50px)',
+              'radial-gradient(ellipse at 50% 0%, rgba(130, 220, 255, 0.25) 0%, rgba(80, 180, 240, 0.08) 35%, transparent 70%)',
+            clipPath: 'polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%)',
+            filter: 'blur(35px)',
           }}
         />
       </div>
 
-      {/* 3D Flying Drumsticks Viewport */}
-      <div
-        className="relative w-full h-full flex items-center justify-center pointer-events-none"
-        style={{
-          perspective: '1100px',
-          perspectiveOrigin: '50% 50%',
-        }}
-      >
-        {/* STICK 1 (LEFT THROWN STICK) */}
-        <div
-          className="absolute"
-          style={{
-            transform: `translate3d(${stick1.x}px, ${stick1.y}px, ${stick1.z}px) scale(${stick1.scale}) rotateX(${stick1.rx}deg) rotateY(${stick1.ry}deg) rotateZ(${stick1.rz}deg)`,
-            transformStyle: 'preserve-3d',
-            filter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.9))',
-          }}
-        >
-          <DrumstickGraphic idSuffix="1" />
-        </div>
-
-        {/* STICK 2 (RIGHT THROWN STICK) */}
-        <div
-          className="absolute"
-          style={{
-            transform: `translate3d(${stick2.x}px, ${stick2.y}px, ${stick2.z}px) scale(${stick2.scale}) rotateX(${stick2.rx}deg) rotateY(${stick2.ry}deg) rotateZ(${stick2.rz}deg)`,
-            transformStyle: 'preserve-3d',
-            filter: 'drop-shadow(0 25px 35px rgba(0,0,0,0.9))',
-          }}
-        >
-          <DrumstickGraphic idSuffix="2" />
-        </div>
-      </div>
-
-      {/* IMPACT EFFECTS OVERLAY */}
+      {/* IMPACT EFFECTS: Procedural Spiderweb Glass Fracture */}
       {crackOpacity > 0 && (
         <div
           className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-150"
           style={{ opacity: crackOpacity }}
         >
-          {/* Procedural Spiderweb Glass Fracture centered at impact */}
           <svg
             className="w-full h-full object-cover"
             viewBox="0 0 1000 1000"
@@ -257,7 +562,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
           >
             <defs>
               <filter id="glassGlint" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="1" result="blur" />
+                <feGaussianBlur stdDeviation="1.2" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -265,49 +570,40 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
               </filter>
             </defs>
 
-            {/* Impact Center Point Core */}
+            {/* Impact Centers */}
             <circle cx="500" cy="500" r="14" fill="#ffffff" filter="url(#glassGlint)" />
-            <circle cx="500" cy="500" r="32" fill="rgba(255,255,255,0.4)" filter="url(#glassGlint)" />
+            <circle cx="500" cy="500" r="34" fill="rgba(255,255,255,0.45)" filter="url(#glassGlint)" />
 
             {/* Spiderweb Radial Fractures */}
             <g stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.95" filter="url(#glassGlint)">
-              {/* Top-Right major crack */}
               <path d="M500 500 L550 420 L610 370 L700 290 L820 190 L950 110" />
-              <path d="M550 420 L640 400 L740 360 L870 330" strokeWidth="1.8" opacity="0.8" />
-
-              {/* Top-Left major crack */}
+              <path d="M550 420 L640 400 L740 360 L870 330" strokeWidth="1.8" opacity="0.85" />
               <path d="M500 500 L440 410 L380 340 L300 270 L190 190 L70 120" />
-              <path d="M440 410 L350 430 L250 420 L130 400" strokeWidth="1.8" opacity="0.8" />
-
-              {/* Bottom-Right major crack */}
+              <path d="M440 410 L350 430 L250 420 L130 400" strokeWidth="1.8" opacity="0.85" />
               <path d="M500 500 L570 560 L660 630 L760 720 L870 820 L980 930" />
-              <path d="M570 560 L680 580 L800 600 L930 630" strokeWidth="1.8" opacity="0.8" />
-
-              {/* Bottom-Left major crack */}
+              <path d="M570 560 L680 580 L800 600 L930 630" strokeWidth="1.8" opacity="0.85" />
               <path d="M500 500 L430 570 L350 640 L260 740 L160 840 L40 940" />
-              <path d="M430 570 L400 680 L360 800 L320 950" strokeWidth="1.8" opacity="0.8" />
-
-              {/* Horizontal & Vertical secondary fissures */}
+              <path d="M430 570 L400 680 L360 800 L320 950" strokeWidth="1.8" opacity="0.85" />
               <path d="M500 500 L515 370 L505 240 L520 80" strokeWidth="2" opacity="0.85" />
               <path d="M500 500 L485 630 L495 780 L480 960" strokeWidth="2" opacity="0.85" />
               <path d="M500 500 L640 510 L780 495 L950 515" strokeWidth="2" opacity="0.85" />
               <path d="M500 500 L360 490 L220 505 L50 485" strokeWidth="2" opacity="0.85" />
 
-              {/* Concentric Impact Rings (Shock Shatter) */}
+              {/* Concentric Impact Rings */}
               <path
                 d="M440 460 Q470 410 520 420 Q570 450 560 510 Q530 570 480 560 Q430 530 440 460 Z"
-                fill="rgba(255, 255, 255, 0.12)"
+                fill="rgba(255, 255, 255, 0.15)"
                 strokeWidth="2.2"
               />
               <path
                 d="M390 420 Q480 340 590 370 Q670 440 640 560 Q580 670 450 640 Q340 570 390 420 Z"
-                fill="rgba(255, 255, 255, 0.06)"
+                fill="rgba(255, 255, 255, 0.08)"
                 strokeWidth="1.8"
                 opacity="0.8"
               />
               <path
                 d="M320 370 Q480 260 670 310 Q770 430 730 630 Q630 780 410 730 Q250 630 320 370 Z"
-                fill="rgba(255, 255, 255, 0.03)"
+                fill="rgba(255, 255, 255, 0.04)"
                 strokeWidth="1.4"
                 opacity="0.6"
               />
@@ -324,7 +620,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
             transform: `scale(${shockwaveScale})`,
             opacity: shockwaveOpacity,
             boxShadow:
-              '0 0 50px 10px rgba(255, 255, 255, 0.8), inset 0 0 30px 10px rgba(255, 255, 255, 0.5)',
+              '0 0 60px 15px rgba(160, 230, 255, 0.85), inset 0 0 35px 12px rgba(255, 255, 255, 0.6)',
           }}
         />
       )}
@@ -335,7 +631,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
           className="absolute inset-0 bg-white pointer-events-none z-50"
           style={{
             opacity: impactFlash,
-            transition: 'opacity 0.08s ease-out',
+            transition: 'opacity 0.06s ease-out',
           }}
         />
       )}
@@ -348,100 +644,5 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         SKIP INTRO ✕
       </button>
     </div>
-  )
-}
-
-/**
- * High-detail realistic 5A American Hickory Drumstick SVG
- */
-function DrumstickGraphic({ idSuffix }: { idSuffix: string }) {
-  return (
-    <svg
-      width="680"
-      height="68"
-      viewBox="0 0 680 68"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="overflow-visible"
-    >
-      <defs>
-        {/* Realistic Hickory Wood Texture Gradient */}
-        <linearGradient id={`woodCylinder-${idSuffix}`} x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#3d2b1f" />
-          <stop offset="12%" stopColor="#8c6a49" />
-          <stop offset="30%" stopColor="#d8b990" />
-          <stop offset="50%" stopColor="#f5dfbe" />
-          <stop offset="70%" stopColor="#c7a477" />
-          <stop offset="90%" stopColor="#7a5839" />
-          <stop offset="100%" stopColor="#302014" />
-        </linearGradient>
-
-        {/* Lacquer Specular Reflection */}
-        <linearGradient id={`lacquerShine-${idSuffix}`} x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-          <stop offset="40%" stopColor="rgba(255,255,255,0.85)" />
-          <stop offset="55%" stopColor="rgba(255,255,255,0.15)" />
-          <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-        </linearGradient>
-
-        {/* 3D Acorn Tip Gradient */}
-        <radialGradient id={`tipGrad-${idSuffix}`} cx="40%" cy="35%" r="65%">
-          <stop offset="0%" stopColor="#fff2dc" />
-          <stop offset="45%" stopColor="#d8b688" />
-          <stop offset="85%" stopColor="#7e5934" />
-          <stop offset="100%" stopColor="#3d2412" />
-        </radialGradient>
-      </defs>
-
-      {/* Butt End Cap */}
-      <path
-        d="M 28 22 C 18 22, 18 46, 28 46 Z"
-        fill="#5c4028"
-        stroke="#2a1a0e"
-        strokeWidth="1.5"
-      />
-
-      {/* Main 5A Stick Shaft with Taper */}
-      <path
-        d="M 28 22 L 510 22 L 605 27 L 648 31 L 648 37 L 605 41 L 510 46 L 28 46 Z"
-        fill={`url(#woodCylinder-${idSuffix})`}
-        stroke="#382415"
-        strokeWidth="1.5"
-      />
-
-      {/* Lathe Turning & Rimshot Marks */}
-      <line x1="110" y1="24" x2="110" y2="44" stroke="rgba(70,40,15,0.3)" strokeWidth="1" />
-      <line x1="240" y1="23" x2="240" y2="45" stroke="rgba(70,40,15,0.3)" strokeWidth="1" />
-      <line x1="390" y1="23" x2="390" y2="45" stroke="rgba(70,40,15,0.3)" strokeWidth="1" />
-      <line x1="530" y1="25" x2="530" y2="43" stroke="rgba(70,40,15,0.3)" strokeWidth="1" />
-
-      {/* 5A Brand Stamp */}
-      <g opacity="0.75">
-        <text
-          x="100"
-          y="37"
-          fill="#221105"
-          fontFamily="Space Mono, monospace"
-          fontSize="9"
-          fontWeight="bold"
-          letterSpacing="2"
-        >
-          5A AMERICAN HICKORY // JAKE
-        </text>
-      </g>
-
-      {/* Lacquer Specular Highlight */}
-      <rect
-        x="28"
-        y="29"
-        width="577"
-        height="3.5"
-        fill={`url(#lacquerShine-${idSuffix})`}
-        opacity="0.9"
-      />
-
-      {/* 5A Oval Acorn Tip */}
-      <ellipse cx="660" cy="34" rx="14" ry="9" fill={`url(#tipGrad-${idSuffix})`} />
-    </svg>
   )
 }
