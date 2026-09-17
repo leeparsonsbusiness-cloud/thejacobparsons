@@ -1,5 +1,5 @@
 // TikTok @jacob.parsons_ Video Archives
-// Ordered strictly from most recently posted to least recently posted (6 videos)
+// Real TikTok videos from https://www.tiktok.com/@jacob.parsons_
 
 export type VideoCategory = 'cinematic' | 'pov'
 
@@ -11,127 +11,195 @@ export interface Video {
   date: string
   order: number
   description: string
+  views: string
   tiktokHandle: string
   tiktokUrl: string
+  thumbnail: string
   category: VideoCategory
   bpm?: string
   kitSpecs?: string
   tags: string[]
-  youtubeId?: string // Fallback / direct video player
+  youtubeId?: string
 }
 
 export const videos: Video[] = [
-  // 1. MOST RECENTLY POSTED
+  // 1. PINNED / 3.4K PLAYS
   {
-    id: 'fein-double-pedal',
-    title: 'FE!N — Viral Double Pedal POV Sprint',
-    subtitle: 'Travis Scott · Drum Cover',
-    artist: 'Travis Scott',
-    date: '1 day ago',
+    id: 'pinned-studio-drum-session',
+    title: 'DARK STUDIO DRUM SESSION',
+    subtitle: 'Jake_TheDrummer · Pinned Showcase',
+    artist: 'Jake Parsons',
+    date: 'Pinned',
     order: 1,
-    category: 'pov',
+    views: '3.4K',
+    category: 'cinematic',
     tiktokHandle: '@jacob.parsons_',
     tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
-    bpm: '148 BPM',
-    kitSpecs: '5A Hickory Sticks · Double Bass Pedal · 14" Birch Snare',
-    tags: ['#doublepedal', '#povdrums', '#drumcover', '#fein', '#travisscott'],
+    thumbnail: '/images/tiktoks/tiktok_1.png',
+    bpm: '150 BPM',
+    kitSpecs: '5A Hickory Sticks · Acoustic Kit · Studio Setup',
+    tags: ['#drummer', '#drums', '#drumtok', '#drumpov', '#drumcover'],
     description:
-      'Pushing the double kick pedals to maximum velocity on the syncopated trap drop. Recorded in raw 4K headcam POV with zero sample replacement.',
-    youtubeId: 'dQw4w9WgXcQ',
+      'High-energy studio drum set session with heavy accents, driving tempo, and raw acoustic power. Pinned featured performance on TikTok.',
   },
 
-  // 2. SECOND MOST RECENT
+  // 2. PRACTICE PAD & MESH RIG
   {
-    id: 'sicko-mode-beat-switch',
-    title: 'SICKO MODE — The Beat Switch Breakdown',
-    subtitle: 'Travis Scott · Full Cinematic Cover',
-    artist: 'Travis Scott',
-    date: '4 days ago',
+    id: 'pov-practice-mesh-rig',
+    title: 'POV PRACTICE RIG & RUDIMENTS',
+    subtitle: 'Electronic Mesh Kit · POV Cam',
+    artist: 'Jake Parsons',
+    date: 'Recent',
     order: 2,
-    category: 'cinematic',
+    views: '193',
+    category: 'pov',
     tiktokHandle: '@jacob.parsons_',
     tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
-    bpm: '155 BPM',
-    kitSpecs: '5A Hickory Sticks · Zildjian Custom Cymbals · Multi-Angle Rig',
-    tags: ['#sickomode', '#cinematicdrums', '#beatswitch', '#drummer', '#astroworld'],
+    thumbnail: '/images/tiktoks/tiktok_2.png',
+    bpm: '140 BPM',
+    kitSpecs: 'Electronic Mesh Pads · 5A Sticks · Practice Setup',
+    tags: ['#drumtraining', '#drumpov', '#practicepad', '#drumming'],
     description:
-      'Multi-angle cinematic cut catching the iconic beat drop. Full dynamic cymbal chokes, heavy tom accents, and high-energy pacing.',
-    youtubeId: 'dQw4w9WgXcQ',
+      'First-person POV dialing in stick control, hand speed, and rudiments on the electronic mesh practice pads.',
   },
 
-  // 3. THIRD MOST RECENT
+  // 3. MOUNTAIN CLIFF POV DRUMMING
   {
-    id: 'everlong-hi-hat-stamina',
-    title: 'EVERLONG — The 16th Note Hi-Hat Stamina Test',
-    subtitle: 'Foo Fighters · Drum Cover',
-    artist: 'Foo Fighters',
-    date: '1 week ago',
+    id: 'mountain-cliff-pov',
+    title: 'MOUNTAIN RIDGE DRUMMING POV',
+    subtitle: 'Outdoor Mountain Edge · POV',
+    artist: 'Jake Parsons',
+    date: 'Recent',
     order: 3,
+    views: '195',
     category: 'pov',
     tiktokHandle: '@jacob.parsons_',
     tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
-    bpm: '158 BPM',
-    kitSpecs: '5A Wood Tip · 14" Crisp Hi-Hats · Uncompressed 24-bit Audio',
-    tags: ['#everlong', '#foofighters', '#drumendurance', '#pov', '#taylorhawkins'],
+    thumbnail: '/images/tiktoks/tiktok_3.png',
+    bpm: '145 BPM',
+    kitSpecs: 'Acoustic Kit · Mountain Ridge Setup · 5A Hickory Sticks',
+    tags: ['#mountaindrums', '#drummer', '#outdoordrums', '#povdrums'],
     description:
-      'Pure right-hand endurance test. Unbroken 16th note groove straight from the drum throne POV. Tribute to the legendary Taylor Hawkins.',
-    youtubeId: 'dQw4w9WgXcQ',
+      'Playing the acoustic kit perched high on the mountain cliff edge overlooking the valley. Pure outdoor acoustic energy.',
   },
 
-  // 4. FOURTH MOST RECENT
+  // 4. AERIAL DRONE // MOUNTAIN JAM
   {
-    id: 'hysteria-bassline-sync',
-    title: 'HYSTERIA — High-Speed Bassline Drum Sync',
-    subtitle: 'Muse · Drum Cover',
-    artist: 'Muse',
-    date: '2 weeks ago',
+    id: 'mountain-aerial-drone-jam',
+    title: 'MOUNTAIN JAM // AERIAL DRONE',
+    subtitle: 'Outdoor Band Session · Drone Cam',
+    artist: 'Jake Parsons',
+    date: 'Recent',
     order: 4,
-    category: 'pov',
-    tiktokHandle: '@jacob.parsons_',
-    tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
-    bpm: '118 BPM',
-    kitSpecs: '5A Sticks · Heavy Ride Cymbal · 4K Chest Mount',
-    tags: ['#muse', '#hysteria', '#drumming', '#ghostnotes', '#fastdrums'],
-    description:
-      'Matching every single note of the iconic distorted fuzz bass line with tight ghost notes and punchy kick drum synchronization.',
-    youtubeId: 'dQw4w9WgXcQ',
-  },
-
-  // 5. FIFTH MOST RECENT
-  {
-    id: 'wellerman-double-kick',
-    title: 'WELLERMAN — Sea Shanty Heavy Double Kick Remix',
-    subtitle: 'Nathan Evans / Remix · Drum Cover',
-    artist: 'Nathan Evans',
-    date: '3 weeks ago',
-    order: 5,
+    views: '87',
     category: 'cinematic',
     tiktokHandle: '@jacob.parsons_',
     tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
-    bpm: '135 BPM',
-    kitSpecs: 'Dual Kick Pedals · 16" & 18" Floor Toms · Stage Lighting',
-    tags: ['#wellerman', '#doublepedal', '#viral', '#remix', '#drumfam'],
+    thumbnail: '/images/tiktoks/tiktok_4.png',
+    bpm: '138 BPM',
+    kitSpecs: 'Outdoor Acoustic Kit · Full Band Rig',
+    tags: ['#droneshot', '#bandjam', '#mountainjam', '#livemusic'],
     description:
-      'Bringing out the double kick pedals and thundering floor toms to turn the viral sea shanty into an arena rock anthem.',
-    youtubeId: 'dQw4w9WgXcQ',
+      'Overhead aerial drone shot capturing the full mountain jam session surrounded by open hills, cliffs, and horizon.',
   },
 
-  // 6. SIXTH (LEAST RECENT OF THE 6)
+  // 5. ROCK CLUSTER DRUM RIG
   {
-    id: 'cherub-rock-snare-dynamics',
-    title: 'CHERUB ROCK — Jimmy Chamberlin Snare Dynamics',
-    subtitle: 'Smashing Pumpkins · Drum Cover',
-    artist: 'Smashing Pumpkins',
-    date: '1 month ago',
+    id: 'rock-cluster-mountain-rig',
+    title: 'THE MOUNTAIN CLIFF SESSION',
+    subtitle: 'Acoustic Kit On The Rocks',
+    artist: 'Jake Parsons',
+    date: 'Recent',
+    order: 5,
+    views: '368',
+    category: 'cinematic',
+    tiktokHandle: '@jacob.parsons_',
+    tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
+    thumbnail: '/images/tiktoks/tiktok_5.png',
+    bpm: '152 BPM',
+    kitSpecs: 'Acoustic Kit · Outdoor Rock Formation',
+    tags: ['#rockdrums', '#outdoorsession', '#drumlife', '#liveperformance'],
+    description:
+      'Hauling the drum kit up the mountain rocks for a raw acoustic drum take with natural canyon resonance.',
+  },
+
+  // 6. LIVE VENUE SHOWCASE (7.1K PLAYS)
+  {
+    id: 'live-venue-smoke-lights',
+    title: 'LIVE VENUE SHOWCASE // 7.1K',
+    subtitle: 'Live Concert · 7.1K+ Views',
+    artist: 'Jake Parsons',
+    date: 'Popular',
     order: 6,
+    views: '7.1K',
+    category: 'cinematic',
+    tiktokHandle: '@jacob.parsons_',
+    tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
+    thumbnail: '/images/tiktoks/tiktok_8.png',
+    bpm: '160 BPM',
+    kitSpecs: 'Full Stage Rig · Zildjian Cymbals · Venue Sound',
+    tags: ['#liveconcert', '#venue', '#stagedrums', '#viral', '#7kviews'],
+    description:
+      'Full live set in heavy fog and neon purple stage lighting. Jake’s most viewed live performance clip on TikTok with over 7,100 views.',
+  },
+
+  // 7. SNARE & TOM TRANSITIONS POV
+  {
+    id: 'snare-tom-accents-pov',
+    title: 'SNARE & TOM ACCENTS // POV',
+    subtitle: 'Overhead POV · Studio Rig',
+    artist: 'Jake Parsons',
+    date: 'Recent',
+    order: 7,
+    views: '411',
     category: 'pov',
     tiktokHandle: '@jacob.parsons_',
     tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
+    thumbnail: '/images/tiktoks/tiktok_9.png',
     bpm: '144 BPM',
-    kitSpecs: '5A Hickory · Vintage Brass Snare · 4K 60FPS Cam',
-    tags: ['#smashingpumpkins', '#cherubrock', '#drummerlife', '#groove', '#snare'],
+    kitSpecs: '14" Snare · Rack Toms · 5A Sticks',
+    tags: ['#snaredrum', '#tomfills', '#drumming', '#pov'],
     description:
-      'Studying the intricate jazz-rock fusion rolls, ghost notes, and snare dynamics of one of rock’s all-time greatest drummers.',
-    youtubeId: 'dQw4w9WgXcQ',
+      'Overhead POV perspective locked into fast rimshots, ghost notes, and smooth tom rolls across the kit.',
+  },
+
+  // 8. LIVE STAGE PERFORMANCE
+  {
+    id: 'live-stage-spotlight',
+    title: 'LIVE STAGE PERFORMANCE',
+    subtitle: 'Live Gig · Spotlight Set',
+    artist: 'Jake Parsons',
+    date: 'Recent',
+    order: 8,
+    views: '221',
+    category: 'cinematic',
+    tiktokHandle: '@jacob.parsons_',
+    tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
+    thumbnail: '/images/tiktoks/tiktok_10.png',
+    bpm: '155 BPM',
+    kitSpecs: 'Stage Acoustic Kit · Mic’d Up',
+    tags: ['#liveshow', '#gig', '#concert', '#livemusic'],
+    description:
+      'Live stage performance driving the energy and holding down the groove under the venue spotlights.',
+  },
+
+  // 9. STAGE READY SOUNDCHECK
+  {
+    id: 'stage-ready-soundcheck',
+    title: 'STAGE READY // SOUNDCHECK',
+    subtitle: 'Pre-Show Warmup · Purple Neon',
+    artist: 'Jake Parsons',
+    date: 'Recent',
+    order: 9,
+    views: '250',
+    category: 'cinematic',
+    tiktokHandle: '@jacob.parsons_',
+    tiktokUrl: 'https://www.tiktok.com/@jacob.parsons_',
+    thumbnail: '/images/tiktoks/tiktok_7.png',
+    bpm: '135 BPM',
+    kitSpecs: 'Stage Setup · Neon Violet Wash',
+    tags: ['#soundcheck', '#preshow', '#drumcheck', '#backstage'],
+    description:
+      'Dialing in levels and getting locked in behind the kit under purple stage lights before the show.',
   },
 ]

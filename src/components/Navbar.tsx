@@ -35,10 +35,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 transform ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#050505]/95 backdrop-blur-md border-b border-white/10 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.9)] opacity-100 translate-y-0'
-          : 'opacity-0 -translate-y-full pointer-events-none py-6'
+          ? 'bg-[#050505]/95 backdrop-blur-md border-b border-white/15 py-3.5 md:py-4 shadow-[0_10px_30px_rgba(0,0,0,0.9)]'
+          : 'bg-[#050505]/85 backdrop-blur-md border-b border-white/10 py-4 md:py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">

@@ -18,7 +18,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative w-full min-h-screen bg-[#050505] flex items-center justify-center px-4 sm:px-6 md:px-10 py-12 select-none overflow-hidden">
+    <section className="relative w-full min-h-screen bg-[#050505] flex items-center justify-center px-4 sm:px-6 md:px-10 pt-24 pb-12 select-none overflow-hidden">
       {/* RAW AUTOPLAYING VIDEO — NO WORDS, NO CONTROLS, SMALLER & CONTAINED */}
       <div className="relative w-full max-w-xl sm:max-w-2xl md:max-w-3xl flex items-center justify-center">
         <video
