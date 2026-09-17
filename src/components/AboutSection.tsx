@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 
 export default function AboutSection() {
   return (
@@ -18,89 +19,56 @@ export default function AboutSection() {
 
             {/* Worn Poster Frame */}
             <div className="worn-frame p-3 relative group">
-              {/* Image Container with Behind-the-Kit Dramatic Stage Shot Simulation */}
-              <div className="relative aspect-[4/5] w-full bg-[#050505] overflow-hidden border border-white/20 flex flex-col justify-between p-6">
-                {/* Stage Lighting & Atmosphere simulation */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      'radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.35) 0%, rgba(180, 180, 180, 0.12) 35%, rgba(10, 10, 10, 0.95) 75%)',
-                  }}
+              {/* Image Container with Jake Behind the Kit */}
+              <div className="relative aspect-[4/5] w-full bg-[#050505] overflow-hidden border border-white/20 flex flex-col justify-between p-4 group">
+                {/* Real Photo of Jake behind the kit */}
+                <Image
+                  src="/images/jake-behind-the-kit.jpg"
+                  alt="Jake The Drummer behind the kit"
+                  fill
+                  priority
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
 
+                {/* Subtle vignette gradient so HUD text stands out clearly */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/60 pointer-events-none z-10" />
+
                 {/* Film grain and scratches texture */}
-                <div className="absolute inset-0 film-grain-overlay opacity-60 pointer-events-none" />
+                <div className="absolute inset-0 film-grain-overlay opacity-30 pointer-events-none z-10" />
 
                 {/* Top Corner Technical Stamping */}
-                <div className="relative z-10 flex items-center justify-between font-mono text-[10px] text-[#999]">
-                  <span className="bg-black/80 px-2 py-0.5 border border-white/20">
+                <div className="relative z-20 flex items-center justify-between font-mono text-[10px] text-white/90">
+                  <span className="bg-black/80 px-2.5 py-1 border border-white/20 backdrop-blur-sm uppercase">
                     STAGE CAM // BEHIND THE KIT
                   </span>
-                  <span>ISO 3200 · 1/250s</span>
-                </div>
-
-                {/* Dramatic Silhouette of Drummer from Behind the Kit */}
-                <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center">
-                  {/* Stylized Silhouette Artwork */}
-                  <svg
-                    width="260"
-                    height="200"
-                    viewBox="0 0 260 200"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="opacity-85 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]"
-                  >
-                    {/* Blinding Stage Light Beam from Center Back */}
-                    <circle cx="130" cy="50" r="45" fill="white" opacity="0.45" filter="blur(15px)" />
-                    <ellipse cx="130" cy="50" rx="90" ry="25" fill="white" opacity="0.2" filter="blur(20px)" />
-
-                    {/* Ride & Crash Cymbals Lit from Rim */}
-                    <ellipse cx="50" cy="85" rx="42" ry="12" fill="#1e1e1e" stroke="#f2f2f2" strokeWidth="2.5" />
-                    <ellipse cx="210" cy="85" rx="42" ry="12" fill="#1e1e1e" stroke="#f2f2f2" strokeWidth="2.5" />
-                    <ellipse cx="130" cy="115" rx="34" ry="10" fill="#181818" stroke="#f2f2f2" strokeWidth="2" />
-
-                    {/* Drummer Torso & Head Silhouette (Back View) */}
-                    <circle cx="130" cy="70" r="18" fill="#080808" stroke="#ffffff" strokeWidth="2" />
-                    <path
-                      d="M 112 88 C 112 88, 90 130, 90 170 L 170 170 C 170 130, 148 88, 148 88 Z"
-                      fill="#080808"
-                      stroke="#ffffff"
-                      strokeWidth="2"
-                    />
-
-                    {/* Raised Drumsticks in Mid-Strike */}
-                    <line x1="110" y1="95" x2="65" y2="40" stroke="#f5f5f5" strokeWidth="4" strokeLinecap="round" />
-                    <line x1="150" y1="95" x2="195" y2="40" stroke="#f5f5f5" strokeWidth="4" strokeLinecap="round" />
-
-                    {/* Snare & Toms Silhouettes */}
-                    <rect x="95" y="145" width="70" height="30" rx="4" fill="#111" stroke="#f2f2f2" strokeWidth="2" />
-                    <rect x="40" y="125" width="45" height="25" rx="4" fill="#111" stroke="#e0e0e0" strokeWidth="1.5" />
-                    <rect x="175" y="125" width="45" height="25" rx="4" fill="#111" stroke="#e0e0e0" strokeWidth="1.5" />
-                  </svg>
-
-                  <p
-                    className="text-white text-2xl md:text-3xl mt-4 tracking-wide shadow-white-text"
-                    style={{ fontFamily: 'var(--font-signature)' }}
-                  >
-                    Jake Parsons
-                  </p>
-                  <p className="font-mono text-[10px] tracking-[0.3em] text-[#888] uppercase mt-1">
-                    [ YOU CAN DROP YOUR REAL LIVE CONCERT PHOTO HERE ]
-                  </p>
+                  <span className="bg-black/80 px-2.5 py-1 border border-white/20 backdrop-blur-sm uppercase">
+                    LIVE REEL
+                  </span>
                 </div>
 
                 {/* Bottom Frame Stamp */}
-                <div className="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between font-mono text-[10px] text-[#aaa]">
-                  <span>VENUE: ARENA RUN // LIVE</span>
-                  <span>5A HICKORY STICKS</span>
+                <div className="relative z-20 pt-4 flex items-end justify-between font-mono text-[10px] text-white/90">
+                  <div className="bg-black/80 px-3.5 py-2 border border-white/20 backdrop-blur-sm">
+                    <span
+                      className="block font-black text-white text-base tracking-wider uppercase"
+                      style={{ fontFamily: 'var(--font-poster)' }}
+                    >
+                      JAKE PARSONS
+                    </span>
+                    <span className="text-[10px] text-[#aaa]">5A HICKORY // BIRCH SHELLS</span>
+                  </div>
+
+                  <span className="bg-black/80 px-2.5 py-1.5 border border-white/20 backdrop-blur-sm text-[9px] text-[#bbb] uppercase">
+                    THEJACOBPARSONS.COM
+                  </span>
                 </div>
               </div>
 
               {/* Photo Caption / Credit Bar */}
               <div className="mt-3 px-2 flex justify-between items-center font-mono text-[10px] text-[#666]">
                 <span>ARCHIVE #0926-JP</span>
-                <span className="uppercase">SAN FRANCISCO // THEJACOBPARSONS.COM</span>
+                <span className="uppercase">THEJACOBPARSONS.COM // PRODUCTION</span>
               </div>
             </div>
           </div>
@@ -122,7 +90,7 @@ export default function AboutSection() {
 
             <div className="space-y-5 text-base md:text-lg text-[#b8b8b8] leading-relaxed">
               <p>
-                I don’t just record drum covers — I build audio-visual experiences. Every take is treated like a tour opener, engineered to hit you directly in the chest.
+                I don&apos;t just record drum covers — I build audio-visual experiences. Every take is treated like a tour opener, engineered to hit you directly in the chest.
               </p>
               <p>
                 From cinematic color-graded film productions with multi-angle lighting, to raw, unfiltered 4K first-person POV sessions where you&apos;re sitting right behind the cymbals — the goal is simple: <strong className="text-white font-bold">make you feel every single hit.</strong>
