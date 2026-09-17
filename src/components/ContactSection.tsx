@@ -69,25 +69,7 @@ export default function ContactSection() {
               Available for live sets, studio drum tracking, viral social collabs, and brand partnerships. Send over your vision and timeline.
             </p>
 
-            {/* Backstage Pass Specs Card */}
-            <div className="worn-frame p-4 space-y-3 font-mono text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-white/10 text-[10px] text-[#888]">
-                <span>DISPATCH UNIT</span>
-                <span>STATUS: ACCEPTING DATES</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#666]">PRIMARY ROLE:</span>
-                <span className="text-white font-bold">DRUMMER / PRODUCER</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#666]">REMOTE TRACKING:</span>
-                <span className="text-white font-bold">YES (MULTI-MIC 4K)</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#666]">DIRECT CONTACT:</span>
-                <span className="text-white font-bold">THEJACOBPARSONS.COM</span>
-              </div>
-            </div>
+
           </div>
 
           {/* Right Column: Interactive Requisition Form */}
