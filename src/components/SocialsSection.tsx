@@ -17,13 +17,6 @@ const socialChannels = [
     url: 'https://www.tiktok.com/@jacob.parsons_',
     tag: 'POV VIRAL CUTS',
   },
-  {
-    platform: 'FACEBOOK',
-    handle: 'Jake The Drummer',
-    desc: 'Full-length performance videos & community hub',
-    url: 'https://www.facebook.com/',
-    tag: 'FULL STREAMS',
-  },
 ]
 
 export default function SocialsSection() {
@@ -32,18 +25,14 @@ export default function SocialsSection() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-[#888] uppercase mb-2">
-            <span className="w-2 h-2 bg-white rounded-full" />
-            <span>GLOBAL BROADCAST NODES</span>
-          </div>
           <h2
             className="text-[clamp(2.8rem,7vw,5.5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-none concert-led-text"
             style={{ fontFamily: 'var(--font-poster)' }}
           >
-            DISPATCH &amp; SOCIALS
+            WHERE TO FIND ME
           </h2>
           <p
-            className="text-lg md:text-xl text-[#b0b0b0] mt-2"
+            className="text-lg md:text-xl text-[#b0b0b0] mt-3"
             style={{ fontFamily: 'var(--font-signature)' }}
           >
             &ldquo;Tune into the frequencies where the drops happen first.&rdquo;
@@ -51,7 +40,7 @@ export default function SocialsSection() {
         </div>
 
         {/* Channels Grid — Tour Pass / Merch Tag Style */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {socialChannels.map((item, idx) => (
             <a
               key={item.platform}
@@ -87,7 +76,7 @@ export default function SocialsSection() {
 
               <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between font-mono text-xs text-white">
                 <span className="tracking-widest uppercase font-bold group-hover:underline flex items-center gap-1">
-                  JOIN FREQUENCY <span>↗</span>
+                  LEARN MORE <span>↗</span>
                 </span>
                 <span className="text-[#555] text-[10px]">VERIFIED FEED</span>
               </div>

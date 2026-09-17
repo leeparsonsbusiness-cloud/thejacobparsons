@@ -56,19 +56,12 @@ export default function AboutSection() {
                     >
                       JAKE PARSONS
                     </span>
-                    <span className="text-[10px] text-[#aaa]">5A HICKORY // BIRCH SHELLS</span>
                   </div>
 
                   <span className="bg-black/80 px-2.5 py-1.5 border border-white/20 backdrop-blur-sm text-[9px] text-[#bbb] uppercase">
                     THEJACOBPARSONS.COM
                   </span>
                 </div>
-              </div>
-
-              {/* Photo Caption / Credit Bar */}
-              <div className="mt-3 px-2 flex justify-between items-center font-mono text-[10px] text-[#666]">
-                <span>ARCHIVE #0926-JP</span>
-                <span className="uppercase">THEJACOBPARSONS.COM // PRODUCTION</span>
               </div>
             </div>
           </div>
@@ -106,21 +99,6 @@ export default function AboutSection() {
               </span>
             </div>
 
-            {/* RIG / PRODUCTION SPECS GRID */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-white/10 font-mono">
-              <div className="border border-white/10 p-3 bg-[#080808]">
-                <span className="block text-[10px] text-[#666] uppercase">STICKS</span>
-                <span className="block text-sm font-bold text-white mt-1">5A HICKORY</span>
-              </div>
-              <div className="border border-white/10 p-3 bg-[#080808]">
-                <span className="block text-[10px] text-[#666] uppercase">POV RIG</span>
-                <span className="block text-sm font-bold text-white mt-1">4K 60FPS CHEST/HEAD</span>
-              </div>
-              <div className="border border-white/10 p-3 bg-[#080808] col-span-2 md:col-span-1">
-                <span className="block text-[10px] text-[#666] uppercase">AUDIO</span>
-                <span className="block text-sm font-bold text-white mt-1">RAW 24-BIT STEMS</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
