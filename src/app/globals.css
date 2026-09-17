@@ -84,92 +84,62 @@ body::before {
   animation: smokeFloatAlt 22s ease-in-out infinite;
 }
 
-/* CONCERT LED LIGHTS FLICKERING EFFECT WITH MONOCHROME ANALOG STATIC (BASED ON REFERENCE IMAGE) */
-@keyframes textStaticWave {
-  0% { 
-    background-position: 0px 50%, 0 0; 
-  }
-  100% { 
-    background-position: -567px 50%, 0 0; 
-  }
-}
-
-@keyframes textGlitchJitter {
-  0%, 91%, 100% {
-    transform: translate(0, 0);
-  }
-  92% {
-    transform: translate(-1.5px, 0.5px);
-  }
-  93% {
-    transform: translate(1.5px, -0.5px);
-  }
-  94% {
-    transform: translate(-0.5px, 0);
-  }
-  95% {
-    transform: translate(0, 0);
-  }
-}
-
+/* CONCERT LED LIGHTS FLICKERING EFFECT (PURE WHITE STADIUM LIGHTING) */
 @keyframes concertLEDFlicker {
   0%, 18.999%, 21.5%, 33.999%, 36.5%, 62.999%, 64.5%, 68.999%, 71.5%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.95))
-            drop-shadow(0 0 28px rgba(255, 255, 255, 0.85))
-            drop-shadow(0 0 65px rgba(255, 255, 255, 0.5));
+    color: #ffffff;
+    text-shadow: 
+      0 0 4px #ffffff,
+      0 0 10px #ffffff,
+      0 0 22px rgba(255, 255, 255, 0.95),
+      0 0 45px rgba(255, 255, 255, 0.8),
+      0 0 85px rgba(255, 255, 255, 0.55),
+      0 0 130px rgba(255, 255, 255, 0.35);
   }
   19%, 21.499% {
-    opacity: 0.28;
-    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.35));
+    opacity: 0.35;
+    color: #888888;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
   }
   34%, 36.499% {
-    opacity: 0.65;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+    opacity: 0.55;
+    color: #b0b0b0;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.3);
   }
   63%, 64.499% {
-    opacity: 0.18;
-    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.2));
+    opacity: 0.2;
+    color: #444444;
+    text-shadow: none;
   }
   69%, 71.499% {
     opacity: 0.75;
-    filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.7));
+    color: #e0e0e0;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7), 0 0 25px rgba(255, 255, 255, 0.4);
+  }
+}
+
+@keyframes concertLEDBank {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.7));
   }
 }
 
 .concert-led-text {
-  position: relative;
-  display: inline-block;
   color: #ffffff;
-  background-image: 
-    url('/images/static-wave-text.png'),
-    linear-gradient(rgba(255, 255, 255, 0.95), rgba(220, 220, 220, 0.85));
-  background-size: 567px 100%, 100% 100%;
-  background-repeat: repeat-x, no-repeat;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: 
-    concertLEDFlicker 4s infinite linear,
-    textStaticWave 6s linear infinite,
-    textGlitchJitter 2.4s steps(2) infinite;
+  animation: concertLEDFlicker 4s infinite linear, concertLEDBank 6s infinite ease-in-out;
   letter-spacing: 0.05em;
-  /* Pure white stadium illumination - NO colored halos */
-  text-shadow: none;
+  display: inline-block;
 }
 
 .concert-led-subtle {
-  position: relative;
-  display: inline-block;
   color: #ffffff;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.95), rgba(220, 220, 220, 0.85)),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 120px 120px;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
   animation: concertLEDFlicker 5.5s infinite linear;
+  letter-spacing: 0.05em;
+  display: inline-block;
 }
 
 /* Snappy Slam animation */

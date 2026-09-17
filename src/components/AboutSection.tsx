@@ -77,7 +77,7 @@ export default function AboutSection() {
           <div className="lg:col-span-6 space-y-8">
             <div>
               <h2
-                className="text-[clamp(2.8rem,7vw,5.5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-[0.9] shadow-white-text"
+                className="text-[clamp(2.8rem,7vw,5.5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-[0.9] concert-led-text"
                 style={{ fontFamily: 'var(--font-poster)' }}
               >
                 ABOUT<br />ME

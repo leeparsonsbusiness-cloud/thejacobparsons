@@ -5,16 +5,16 @@ import React from 'react'
 const socialChannels = [
   {
     platform: 'INSTAGRAM',
-    handle: '@jake.the.drummer',
+    handle: '@Jake_thedrummer26',
     desc: 'Cinematic reel cuts & behind-the-scenes film shots',
-    url: 'https://www.instagram.com/',
+    url: 'https://www.instagram.com/Jake_thedrummer26',
     tag: 'REELS / STORIES',
   },
   {
     platform: 'TIKTOK',
-    handle: '@jake.the.drummer',
+    handle: '@jacob.parsons_',
     desc: 'High-energy 4K POV drum cam drops & sound bites',
-    url: 'https://www.tiktok.com/',
+    url: 'https://www.tiktok.com/@jacob.parsons_',
     tag: 'POV VIRAL CUTS',
   },
   {
@@ -37,7 +37,7 @@ export default function SocialsSection() {
             <span>GLOBAL BROADCAST NODES</span>
           </div>
           <h2
-            className="text-[clamp(2.8rem,7vw,5.5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-none shadow-white-text"
+            className="text-[clamp(2.8rem,7vw,5.5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-none concert-led-text"
             style={{ fontFamily: 'var(--font-poster)' }}
           >
             DISPATCH &amp; SOCIALS

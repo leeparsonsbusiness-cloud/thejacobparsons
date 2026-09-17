@@ -51,7 +51,7 @@ export default function ContactSection() {
                 <span>DIRECT DISPATCH</span>
               </div>
               <h2
-                className="text-[clamp(2.8rem,6vw,5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-[0.9] shadow-white-text"
+                className="text-[clamp(2.8rem,6vw,5rem)] font-black uppercase tracking-tight text-[#f2f2f2] leading-[0.9] concert-led-text"
                 style={{ fontFamily: 'var(--font-poster)' }}
               >
                 BOOKING &amp;<br />COLLAB

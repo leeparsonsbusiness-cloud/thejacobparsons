@@ -71,21 +71,14 @@ export default function VideoSection() {
       <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* SECTION HEADER — CONCERT LED FLICKER LIGHTS WITH STATIC */}
-        <div className="mb-16 pb-8 border-b border-white/10 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-[#888] uppercase mb-3">
-            <span className="w-2 h-2 bg-white rounded-full" />
-            <span>TIKTOK ARCHIVES · @JAKE_THEDRUMMER</span>
-          </div>
+        {/* SECTION HEADER — CONCERT LED FLICKER LIGHTS (LEFT ALIGNED) */}
+        <div className="mb-14 pb-6 border-b border-white/10 text-left">
           <h2
             className="text-[clamp(2.8rem,7vw,6rem)] font-black uppercase tracking-tight leading-none concert-led-text"
             style={{ fontFamily: 'var(--font-poster)' }}
           >
             VIDEOS
           </h2>
-          <p className="font-mono text-xs text-[#888] mt-2 uppercase tracking-widest">
-            ORDERED FROM MOST RECENTLY POSTED TO LEAST · CLICK ANY TAPE TO OPEN ITS DEDICATED PAGE
-          </p>
         </div>
 
         {/* VIDEOS GRID — EACH LEADS TO A SEPARATE PAGE */}
@@ -155,28 +148,38 @@ export default function VideoSection() {
                 <span className="uppercase tracking-widest text-white group-hover:underline flex items-center gap-1">
                   VIEW FULL TAPE <span>→</span>
                 </span>
-                <span className="text-[#666]">@jake_thedrummer</span>
+                <span className="text-[#888]">@jacob.parsons_</span>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* SONG COVER REQUEST BUTTON */}
-        <div className="mt-20 text-center">
+        {/* ACTIONS: REQUEST A SONG COVER + VISIT TIKTOK */}
+        <div className="mt-20 flex flex-col sm:flex-row items-center justify-center gap-5 text-center">
           <button
             onClick={() => {
               setShowRequestModal(true)
               setRequestSuccess(false)
             }}
-            className="group relative inline-flex items-center gap-3 bg-white text-black font-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em] px-9 py-5 hover:bg-[#d8d8d8] transition-all duration-200 shadow-[0_0_30px_rgba(255,255,255,0.4)] cursor-pointer"
+            className="group relative inline-flex items-center justify-center gap-3 bg-white text-black font-mono text-xs md:text-sm font-bold uppercase tracking-[0.25em] px-8 py-5 hover:bg-[#d8d8d8] transition-all duration-200 shadow-[0_0_30px_rgba(255,255,255,0.4)] cursor-pointer w-full sm:w-auto"
           >
             <span>🥁 REQUEST A SONG COVER</span>
             <span className="group-hover:translate-x-1 transition-transform">→</span>
           </button>
-          <p className="font-mono text-[11px] text-[#888] tracking-widest uppercase mt-3">
-            [ HAVE A TRACK YOU WANT TO SEE PLAYED? SEND YOUR REQUEST DIRECTLY TO JAKE ]
-          </p>
+
+          <a
+            href="https://www.tiktok.com/@jacob.parsons_"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white font-mono text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white px-8 py-5 hover:bg-white/10 transition-all duration-200 w-full sm:w-auto"
+          >
+            <span>TIKTOK @JACOB.PARSONS_</span>
+            <span>↗</span>
+          </a>
         </div>
+        <p className="font-mono text-[11px] text-[#888] tracking-widest uppercase mt-4 text-center">
+          [ HAVE A TRACK YOU WANT TO SEE PLAYED? SEND YOUR REQUEST DIRECTLY TO JAKE ]
+        </p>
       </div>
 
       {/* DEDICATED SONG REQUEST POPUP MODAL */}
