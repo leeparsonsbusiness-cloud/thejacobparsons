@@ -26,8 +26,8 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div className="flex flex-wrap justify-center gap-6 font-mono text-xs text-[#888]">
-          <a href="#footage" className="hover:text-white transition-colors">
-            [ FOOTAGE ]
+          <a href="#videos" className="hover:text-white transition-colors">
+            [ VIDEOS ]
           </a>
           <a href="#about" className="hover:text-white transition-colors">
             [ BEHIND THE KIT ]

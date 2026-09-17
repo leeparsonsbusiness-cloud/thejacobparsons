@@ -66,7 +66,7 @@ export default function VideoSection() {
     'w-full bg-[#050505] border border-white/20 text-[#f2f2f2] font-mono text-xs px-4 py-3 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all placeholder:text-[#555]'
 
   return (
-    <section id="footage" className="relative py-28 px-6 overflow-hidden">
+    <section id="videos" className="relative py-28 px-6 overflow-hidden">
       {/* Background distressed glow */}
       <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-[100px] pointer-events-none" />
 
@@ -81,7 +81,7 @@ export default function VideoSection() {
             className="text-[clamp(2.8rem,7vw,6rem)] font-black uppercase tracking-tight leading-none concert-led-text"
             style={{ fontFamily: 'var(--font-poster)' }}
           >
-            THE FOOTAGE
+            VIDEOS
           </h2>
           <p className="font-mono text-xs text-[#888] mt-2 uppercase tracking-widest">
             ORDERED FROM MOST RECENTLY POSTED TO LEAST · CLICK ANY TAPE TO OPEN ITS DEDICATED PAGE

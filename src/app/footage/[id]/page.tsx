@@ -48,11 +48,11 @@ export default async function VideoDetailPage({
         {/* Navigation Breadcrumb */}
         <div className="mb-8 flex items-center justify-between font-mono text-xs text-[#888]">
           <Link
-            href="/#footage"
+            href="/#videos"
             className="inline-flex items-center gap-2 hover:text-white transition-colors border border-white/15 px-3 py-1.5 bg-[#090909]"
           >
             <span>←</span>
-            <span>RETURN TO THE FOOTAGE</span>
+            <span>RETURN TO VIDEOS</span>
           </Link>
 
           <div className="flex items-center gap-3">

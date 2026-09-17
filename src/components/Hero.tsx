@@ -190,10 +190,10 @@ export default function Hero() {
         {/* QUICK ACTION BUTTONS */}
         <div className="slam-visible mt-12 flex flex-wrap items-center justify-center gap-5">
           <a
-            href="#footage"
+            href="#videos"
             className="group relative overflow-hidden bg-white text-black font-mono text-xs font-bold uppercase tracking-[0.25em] px-8 py-4 hover:bg-[#d8d8d8] transition-all duration-200 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
           >
-            <span>WATCH ALL FOOTAGE</span>
+            <span>WATCH ALL VIDEOS</span>
             <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
           </a>
         </div>
