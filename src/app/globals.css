@@ -1,26 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Permanent+Marker&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --surface: #0a0a0a;
+  --surface-raised: #121212;
+  --foreground: #f2f2f2;
+  --shadow-white: #e5e5e5;
+  --shadow-white-muted: #8e8e8e;
+  --shadow-white-dark: #3a3a3a;
+  --border-gritty: rgba(242, 242, 242, 0.15);
+  --border-heavy: rgba(242, 242, 242, 0.35);
+  --ember-core: #ff4500;
+  --ember-bright: #ffbe3b;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-shadow-white: var(--shadow-white);
+  --font-poster: 'Bebas Neue', Impact, sans-serif;
+  --font-signature: 'Permanent Marker', cursive;
+  --font-heavy: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #050505;
+  color: #f2f2f2;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-heavy), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Concert Haze & Film Scratches Background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Film scratches and grain overlay */
+.film-grain-overlay {
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Smoke drift background */
+@keyframes smokeFloat {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+  50% { transform: translate(-30px, -20px) scale(1.1); opacity: 0.28; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+}
+
+@keyframes smokeFloatAlt {
+  0% { transform: translate(0, 0) scale(1.05); opacity: 0.2; }
+  50% { transform: translate(25px, 30px) scale(0.95); opacity: 0.35; }
+  100% { transform: translate(0, 0) scale(1.05); opacity: 0.2; }
+}
+
+.animate-smoke-1 {
+  animation: smokeFloat 16s ease-in-out infinite;
+}
+
+.animate-smoke-2 {
+  animation: smokeFloatAlt 22s ease-in-out infinite;
+}
+
+/* CONCERT LED LIGHTS FLICKERING EFFECT */
+@keyframes concertLEDFlicker {
+  0%, 18.999%, 21.5%, 33.999%, 36.5%, 62.999%, 64.5%, 68.999%, 71.5%, 100% {
+    opacity: 1;
+    color: #ffffff;
+    text-shadow: 
+      0 0 4px #ffffff,
+      0 0 10px #ffffff,
+      0 0 22px rgba(255, 255, 255, 0.95),
+      0 0 45px rgba(225, 238, 255, 0.8),
+      0 0 85px rgba(190, 220, 255, 0.55),
+      0 0 130px rgba(170, 210, 255, 0.35);
+  }
+  19%, 21.499% {
+    opacity: 0.35;
+    color: #888888;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+  }
+  34%, 36.499% {
+    opacity: 0.55;
+    color: #b0b0b0;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.5), 0 0 15px rgba(200, 220, 255, 0.3);
+  }
+  63%, 64.499% {
+    opacity: 0.2;
+    color: #444444;
+    text-shadow: none;
+  }
+  69%, 71.499% {
+    opacity: 0.75;
+    color: #e0e0e0;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7), 0 0 25px rgba(200, 225, 255, 0.4);
+  }
+}
+
+@keyframes concertLEDBank {
+  0%, 100% {
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.45));
+  }
+  50% {
+    filter: drop-shadow(0 0 45px rgba(255, 255, 255, 0.75));
+  }
+}
+
+.concert-led-text {
+  color: #ffffff;
+  animation: concertLEDFlicker 4s infinite linear, concertLEDBank 6s infinite ease-in-out;
+  letter-spacing: 0.05em;
+}
+
+.concert-led-subtle {
+  color: #ffffff;
+  animation: concertLEDFlicker 5.5s infinite linear;
+}
+
+/* Snappy Slam animation */
+@keyframes slamIn {
+  0% {
+    opacity: 0;
+    transform: translateY(45px) scale(1.04);
+    filter: blur(8px);
+  }
+  70% {
+    transform: translateY(-4px) scale(0.99);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.slam-visible {
+  animation: slamIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.slam-element {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slam-element.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Worn Concert Poster & Duct Tape Effects */
+.worn-frame {
+  position: relative;
+  background: #0c0c0c;
+  border: 1px solid rgba(242, 242, 242, 0.2);
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.95),
+    0 0 40px rgba(0, 0, 0, 0.9),
+    inset 0 0 35px rgba(0,0,0,0.85);
+}
+
+.worn-frame::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(255,255,255,0.08);
+  pointer-events: none;
+}
+
+/* Streetwear Duct Tape Accent */
+.tape-corner-tl {
+  position: absolute;
+  top: -12px;
+  left: -20px;
+  width: 70px;
+  height: 26px;
+  background: rgba(220, 220, 220, 0.25);
+  backdrop-filter: blur(2px);
+  border-left: 1px dashed rgba(255,255,255,0.4);
+  border-right: 1px dashed rgba(255,255,255,0.4);
+  transform: rotate(-32deg);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.tape-corner-br {
+  position: absolute;
+  bottom: -12px;
+  right: -20px;
+  width: 75px;
+  height: 26px;
+  background: rgba(220, 220, 220, 0.22);
+  backdrop-filter: blur(2px);
+  border-left: 1px dashed rgba(255,255,255,0.4);
+  border-right: 1px dashed rgba(255,255,255,0.4);
+  transform: rotate(-30deg);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Shadow white glowing title drop shadow */
+.shadow-white-text {
+  color: var(--shadow-white);
+  text-shadow: 
+    0 0 20px rgba(242, 242, 242, 0.35),
+    0 4px 35px rgba(0, 0, 0, 0.95),
+    0 15px 50px rgba(0, 0, 0, 1);
+}
+
+.heavy-shadow {
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.95), 0 10px 20px -5px rgba(0,0,0,0.8);
+}
+
+/* CRT Scanline effect on video box */
+.crt-lines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.35) 50%
+  );
+  background-size: 100% 4px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #252525;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+::selection {
+  background: #f2f2f2;
+  color: #050505;
 }
