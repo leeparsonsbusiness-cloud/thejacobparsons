@@ -187,7 +187,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const height = window.innerHeight
 
     const scene = new THREE.Scene()
-    scene.fog = new THREE.FogExp2(0x050505, 0.02)
 
     const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 1000)
     camera.position.set(0, 0, 7.5)
@@ -201,67 +200,70 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     renderer.setSize(width, height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.35
+    renderer.toneMappingExposure = 1.25
 
     const mount = containerRef.current
     mount.appendChild(renderer.domElement)
 
-    // --- LIGHTING ---
+    // --- CINEMATIC LIGHTING (Studio High-Contrast Setup) ---
     // Ambient fill
-    const ambientLight = new THREE.AmbientLight(0x282830, 0.9)
+    const ambientLight = new THREE.AmbientLight(0x404048, 1.2)
     scene.add(ambientLight)
 
-    // Crisp high-intensity key spotlight (illuminating cylindrical wood surface)
-    const keySpotlight = new THREE.SpotLight(0xffffff, 50, 100, Math.PI / 3, 0.4)
-    keySpotlight.position.set(4, 10, 12)
-    scene.add(keySpotlight)
+    // High-intensity key directional light from above-front
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8)
+    keyLight.position.set(4, 8, 10)
+    scene.add(keyLight)
 
-    // Matrix-cyan rim backlight (intense edge highlight on stick contours)
-    const rimLight = new THREE.DirectionalLight(0x60d8ff, 4.5)
-    rimLight.position.set(-8, 3, -4)
+    // Matrix cyan rim light from behind (razor-sharp contour highlight)
+    const rimLight = new THREE.DirectionalLight(0x50d0ff, 3.8)
+    rimLight.position.set(-6, 4, -6)
     scene.add(rimLight)
 
-    // Warm amber fill light for rich hickory tones
-    const bounceLight = new THREE.DirectionalLight(0xffaa55, 2.2)
-    bounceLight.position.set(7, -5, 6)
+    // Warm amber fill light from below
+    const bounceLight = new THREE.DirectionalLight(0xffaa50, 1.8)
+    bounceLight.position.set(6, -5, 5)
     scene.add(bounceLight)
 
-    // Dynamic point light at impact zone
-    const impactPointLight = new THREE.PointLight(0xffffff, 0, 25)
-    impactPointLight.position.set(0, 0, 5)
+    // Dynamic point light at impact point
+    const impactPointLight = new THREE.PointLight(0xffffff, 0, 30)
+    impactPointLight.position.set(0, 0, 6)
     scene.add(impactPointLight)
 
-    // --- 3D 5A DRUMSTICK MESHES ---
+    // --- 3D 5A DRUMSTICKS (Group + Mesh architecture for true Matrix bullet spin) ---
     const stickGeometry = create5ADrumstickGeometry()
     const hickoryTexture = createHickoryTexture()
+    hickoryTexture.needsUpdate = true
 
-    // MeshPhysicalMaterial for authentic lustrous wooden lacquer
     const drumstickMaterial = new THREE.MeshPhysicalMaterial({
       map: hickoryTexture,
       roughness: 0.22,
-      metalness: 0.03,
-      clearcoat: 1.0,
+      metalness: 0.02,
+      clearcoat: 0.95,
       clearcoatRoughness: 0.12,
-      reflectivity: 0.75,
+      reflectivity: 0.7,
     })
 
-    // Drumstick 1 (Left stick: Lead projectile flying towards viewer)
-    const stick1 = new THREE.Mesh(stickGeometry, drumstickMaterial)
-    scene.add(stick1)
+    // Stick 1 (Left projectile)
+    const stickGroup1 = new THREE.Group()
+    const mesh1 = new THREE.Mesh(stickGeometry, drumstickMaterial)
+    stickGroup1.add(mesh1)
+    scene.add(stickGroup1)
 
-    // Drumstick 2 (Right stick: Crossing projectile)
-    const stick2 = new THREE.Mesh(stickGeometry, drumstickMaterial)
-    scene.add(stick2)
+    // Stick 2 (Right projectile)
+    const stickGroup2 = new THREE.Group()
+    const mesh2 = new THREE.Mesh(stickGeometry, drumstickMaterial)
+    stickGroup2.add(mesh2)
+    scene.add(stickGroup2)
 
     // --- MATRIX BULLET-TIME AIR WAKE / SHOCKWAVE RINGS ---
-    // Conical air wake disturbance rings trailing the sticks
-    const ringGeometry = new THREE.TorusGeometry(0.45, 0.04, 16, 36)
+    const ringGeometry = new THREE.TorusGeometry(0.45, 0.038, 16, 36)
     const wakeRings: WakeRing[] = []
     const MAX_RINGS = 36
 
     for (let i = 0; i < MAX_RINGS; i++) {
       const ringMat = new THREE.MeshBasicMaterial({
-        color: 0x88f0ff,
+        color: 0x78e8ff,
         transparent: true,
         opacity: 0,
         blending: THREE.AdditiveBlending,
@@ -295,17 +297,17 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     }
 
     // --- SUSPENDED MATRIX DUST PARTICLES ---
-    const dustCount = 350
+    const dustCount = 300
     const dustGeo = new THREE.BufferGeometry()
     const dustPositions = new Float32Array(dustCount * 3)
     for (let i = 0; i < dustCount; i++) {
-      dustPositions[i * 3] = (Math.random() - 0.5) * 20
-      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 14
-      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 24
+      dustPositions[i * 3] = (Math.random() - 0.5) * 18
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 12
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 20
     }
     dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3))
     const dustMat = new THREE.PointsMaterial({
-      color: 0x98edff,
+      color: 0x90e8ff,
       size: 0.07,
       transparent: true,
       opacity: 0.45,
@@ -319,7 +321,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     let animationFrameId: number
     let lastRingSpawnTime = 0
 
-    // Local tip offset in centered lathe geometry (length 10.2 -> tip at y = 5.1)
+    // Local tip offset in centered lathe geometry (length 10.2 -> tip at y = 5.05)
     const tipLocalOffset = new THREE.Vector3(0, 5.05, 0)
 
     const animate = (timestamp: number) => {
@@ -338,54 +340,55 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         const n = (elapsed - 0.28) / 1.27
         bulletT = 0.22 + n * 0.62
       } else if (elapsed < 1.7) {
-        // Point-blank speed surge into camera glass: 0.84 -> 1.0
+        // Point-blank surge into camera lens: 0.84 -> 1.0
         const n = (elapsed - 1.55) / 0.15
-        bulletT = 0.84 + Math.pow(n, 2.5) * 0.16
+        bulletT = 0.84 + Math.pow(n, 2.4) * 0.16
       } else {
         bulletT = 1.0
       }
 
-      // --- STICK 1 (LEFT THROWN DRUMSTICK) ---
-      // Travels from deep arena (Z = -22) to point blank glass (Z = 2.4, tip at Z = 7.4, camera at Z = 7.5)
-      const s1StartZ = -22
+      // --- STICK 1 (LEFT THROWN DRUMSTICK: Flying head-on at the viewer) ---
+      // Travels from Z = -16 to Z = 2.4 (Tip starts at Z = -10.95, ends at Z = 7.45 right against camera Z = 7.5!)
+      const s1StartZ = -16
       const s1EndZ = 2.4
       const s1Z = s1StartZ + bulletT * (s1EndZ - s1StartZ)
-      const s1X = -4.5 * (1 - bulletT) - 0.3 * bulletT
-      const s1Y = -1.8 * (1 - bulletT) - 0.05 * bulletT
+      const s1X = -3.2 * (1 - bulletT) - 0.25 * bulletT
+      const s1Y = -1.2 * (1 - bulletT) - 0.05 * bulletT
+      stickGroup1.position.set(s1X, s1Y, s1Z)
 
-      stick1.position.set(s1X, s1Y, s1Z)
+      // Authentic bullet rifling spin around the stick's own axis:
+      mesh1.rotation.y = elapsed * 26.0
 
-      // Matrix rifling bullet spin (fast axial spin around Y) + slow corkscrew pitch/yaw
-      const axialSpin1 = elapsed * 14.0
-      const pitchAngle1 = Math.PI * 0.48 + Math.sin(elapsed * 2.2) * 0.15
-      const yawAngle1 = -0.15 + Math.cos(elapsed * 1.8) * 0.12
-
-      // Apply Euler in YXZ order for authentic bullet rifling spin along stick axis
-      stick1.rotation.set(pitchAngle1, yawAngle1, axialSpin1, 'YXZ')
+      // StickGroup points stick towards viewer (+90 deg on X) with subtle corkscrew drift
+      const wobble1X = Math.PI * 0.5 + Math.sin(elapsed * 2.5) * 0.06
+      const wobble1Y = -0.06 + Math.cos(elapsed * 2.0) * 0.08
+      const wobble1Z = Math.sin(elapsed * 1.8) * 0.04
+      stickGroup1.rotation.set(wobble1X, wobble1Y, wobble1Z)
 
       // --- STICK 2 (RIGHT THROWN DRUMSTICK: Crossing trajectory) ---
-      const s2StartZ = -25
-      const s2EndZ = 2.2
+      const s2StartZ = -18
+      const s2EndZ = 2.3
       const s2Z = s2StartZ + bulletT * (s2EndZ - s2StartZ)
-      const s2X = 5.2 * (1 - bulletT) + 0.35 * bulletT
-      const s2Y = 2.0 * (1 - bulletT) + 0.12 * bulletT
+      const s2X = 3.8 * (1 - bulletT) + 0.3 * bulletT
+      const s2Y = 1.4 * (1 - bulletT) + 0.1 * bulletT
+      stickGroup2.position.set(s2X, s2Y, s2Z)
 
-      stick2.position.set(s2X, s2Y, s2Z)
+      // Counter-rotating rifling spin
+      mesh2.rotation.y = -elapsed * 28.0
 
-      const axialSpin2 = -elapsed * 16.0
-      const pitchAngle2 = -Math.PI * 0.47 + Math.sin(elapsed * 2.0) * 0.18
-      const yawAngle2 = 0.18 + Math.cos(elapsed * 1.6) * 0.14
-
-      stick2.rotation.set(pitchAngle2, yawAngle2, axialSpin2, 'YXZ')
+      const wobble2X = Math.PI * 0.5 + Math.sin(elapsed * 2.2 + 1.2) * 0.07
+      const wobble2Y = 0.08 + Math.cos(elapsed * 1.7 + 0.8) * 0.09
+      const wobble2Z = -Math.sin(elapsed * 1.5) * 0.05
+      stickGroup2.rotation.set(wobble2X, wobble2Y, wobble2Z)
 
       // --- MATRIX DUST DRIFT ---
-      dustParticles.rotation.y = elapsed * 0.035
+      dustParticles.rotation.y = elapsed * 0.03
       dustParticles.rotation.z = elapsed * 0.015
 
       // --- MATRIX CAMERA BULLET-TIME ORBIT ---
       if (elapsed < 1.7) {
-        camera.position.x = Math.sin(elapsed * 1.4) * 0.65
-        camera.position.y = Math.cos(elapsed * 1.1) * 0.45
+        camera.position.x = Math.sin(elapsed * 1.3) * 0.5
+        camera.position.y = Math.cos(elapsed * 1.0) * 0.35
         camera.lookAt(0, 0, s1Z * 0.6)
       }
 
@@ -393,17 +396,17 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       if (elapsed > 0.12 && elapsed < 1.68) {
         if (elapsed - lastRingSpawnTime > 0.04) {
           lastRingSpawnTime = elapsed
-          // Get world positions of stick tips
-          const tip1World = tipLocalOffset.clone().applyMatrix4(stick1.matrixWorld)
-          const forward1 = new THREE.Vector3(0, 1, 0)
-            .applyQuaternion(stick1.quaternion)
-            .normalize()
+          stickGroup1.updateMatrixWorld(true)
+          stickGroup2.updateMatrixWorld(true)
+
+          const tip1World = tipLocalOffset.clone()
+          mesh1.localToWorld(tip1World)
+          const forward1 = new THREE.Vector3(0, 0, 1)
           spawnWakeRing(tip1World, forward1, elapsed)
 
-          const tip2World = tipLocalOffset.clone().applyMatrix4(stick2.matrixWorld)
-          const forward2 = new THREE.Vector3(0, 1, 0)
-            .applyQuaternion(stick2.quaternion)
-            .normalize()
+          const tip2World = tipLocalOffset.clone()
+          mesh2.localToWorld(tip2World)
+          const forward2 = new THREE.Vector3(0, 0, 1)
           spawnWakeRing(tip2World, forward2, elapsed)
         }
       }
@@ -420,7 +423,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
           const currentScale = 0.7 + ringProgress * 3.4
           ring.mesh.scale.set(currentScale, currentScale, currentScale)
           const mat = ring.mesh.material as THREE.MeshBasicMaterial
-          mat.opacity = (1 - ringProgress) * 0.7
+          mat.opacity = (1 - ringProgress) * 0.75
         }
       })
 
@@ -446,24 +449,24 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         // Impact flash spike & point light flash
         const flashIntensity = Math.max(0, 1 - normImpact * 2.2)
         setImpactFlash(flashIntensity)
-        impactPointLight.intensity = flashIntensity * 150
+        impactPointLight.intensity = flashIntensity * 160
 
         // Expanding radial shockwave ring
         setShockwaveScale(normImpact * 4.5)
         setShockwaveOpacity(Math.max(0, 1 - normImpact))
 
         // Sticks violently deflect off the lens glass
-        stick1.position.x -= normImpact * 4.5
-        stick1.position.y += normImpact * 3.0
-        stick1.position.z -= normImpact * 6.5
-        stick1.rotation.x += normImpact * 5
-        stick1.rotation.z += normImpact * 7
+        stickGroup1.position.x -= normImpact * 4.0
+        stickGroup1.position.y += normImpact * 2.5
+        stickGroup1.position.z -= normImpact * 6.0
+        stickGroup1.rotation.x += normImpact * 4
+        stickGroup1.rotation.z += normImpact * 6
 
-        stick2.position.x += normImpact * 4.8
-        stick2.position.y -= normImpact * 3.2
-        stick2.position.z -= normImpact * 7.0
-        stick2.rotation.x -= normImpact * 6
-        stick2.rotation.z -= normImpact * 8
+        stickGroup2.position.x += normImpact * 4.2
+        stickGroup2.position.y -= normImpact * 2.8
+        stickGroup2.position.z -= normImpact * 6.5
+        stickGroup2.rotation.x -= normImpact * 5
+        stickGroup2.rotation.z -= normImpact * 7
       }
       // -------------------------------------------------------------
       // 3. DISSOLVE INTO WEBSITE (2.10s -> 2.55s)
