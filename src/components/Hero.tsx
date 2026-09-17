@@ -18,22 +18,24 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative w-full h-screen min-h-screen bg-[#050505] overflow-hidden flex items-center justify-center select-none">
-      {/* RAW AUTOPLAYING VIDEO — NO WORDS, NO CONTROLS */}
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        disablePictureInPicture
-        disableRemotePlayback
-        controls={false}
-        className="w-full h-full object-cover pointer-events-none select-none"
-      >
-        <source src="/videos/landing-video.mp4" type="video/mp4" />
-        <source src="/videos/landing-video.mov" type="video/quicktime" />
-      </video>
+    <section className="relative w-full min-h-screen bg-[#050505] flex items-center justify-center px-4 sm:px-6 md:px-10 py-12 select-none overflow-hidden">
+      {/* RAW AUTOPLAYING VIDEO — NO WORDS, NO CONTROLS, SMALLER & CONTAINED */}
+      <div className="relative w-full max-w-xl sm:max-w-2xl md:max-w-3xl flex items-center justify-center">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+          disableRemotePlayback
+          controls={false}
+          className="w-full max-h-[65vh] object-contain pointer-events-none select-none rounded shadow-2xl shadow-black/80"
+        >
+          <source src="/videos/landing-video.mp4" type="video/mp4" />
+          <source src="/videos/landing-video.mov" type="video/quicktime" />
+        </video>
+      </div>
     </section>
   )
 }
