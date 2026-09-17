@@ -285,6 +285,33 @@ body::before {
   background: #444;
 }
 
+/* Seamless Non-Stop Continuous Marquee */
+@keyframes continuousMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-continuous-container {
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.marquee-continuous-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: continuousMarquee 32s linear infinite !important;
+}
+
+.marquee-continuous-track:hover {
+  animation-play-state: running !important;
+}
+
 ::selection {
   background: #f2f2f2;
   color: #050505;

@@ -96,13 +96,43 @@ export default function SocialsSection() {
         </div>
 
         {/* Marquee Banner */}
-        <div className="mt-20 border-y border-white/10 py-4 overflow-hidden select-none bg-[#090909]">
-          <div className="flex animate-marquee whitespace-nowrap font-mono text-xs tracking-[0.4em] text-[#666] uppercase">
-            {[...Array(4)].map((_, i) => (
-              <span key={i} className="mx-8">
-                JAKE THE DRUMMER · CINEMATIC COVERS · 4K POV SESSIONS · 5A AMERICAN HICKORY · THEJACOBPARSONS.COM ·
-              </span>
-            ))}
+        <div className="mt-20 border-y border-white/10 py-4 overflow-hidden select-none bg-[#090909] marquee-continuous-container">
+          <div className="marquee-continuous-track flex whitespace-nowrap font-mono text-xs tracking-[0.4em] text-[#888] uppercase">
+            {/* Track 1 */}
+            <div className="flex shrink-0 items-center">
+              {[...Array(4)].map((_, i) => (
+                <span key={`t1-${i}`} className="mx-6 flex items-center gap-6">
+                  <span className="text-white/90">JAKE THE DRUMMER</span>
+                  <span className="text-white/30">·</span>
+                  <span>CINEMATIC COVERS</span>
+                  <span className="text-white/30">·</span>
+                  <span className="text-white/90">4K POV SESSIONS</span>
+                  <span className="text-white/30">·</span>
+                  <span>5A AMERICAN HICKORY</span>
+                  <span className="text-white/30">·</span>
+                  <span className="text-white/90">THEJACOBPARSONS.COM</span>
+                  <span className="text-white/30">·</span>
+                </span>
+              ))}
+            </div>
+
+            {/* Track 2 (identical duplicate for seamless infinite loop) */}
+            <div className="flex shrink-0 items-center" aria-hidden="true">
+              {[...Array(4)].map((_, i) => (
+                <span key={`t2-${i}`} className="mx-6 flex items-center gap-6">
+                  <span className="text-white/90">JAKE THE DRUMMER</span>
+                  <span className="text-white/30">·</span>
+                  <span>CINEMATIC COVERS</span>
+                  <span className="text-white/30">·</span>
+                  <span className="text-white/90">4K POV SESSIONS</span>
+                  <span className="text-white/30">·</span>
+                  <span>5A AMERICAN HICKORY</span>
+                  <span className="text-white/30">·</span>
+                  <span className="text-white/90">THEJACOBPARSONS.COM</span>
+                  <span className="text-white/30">·</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
